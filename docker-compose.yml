@@ -1,0 +1,28 @@
+version: '3'
+services:
+  api:
+    container_name: api_container
+    build:
+      context: ./api
+      args:
+        NODE_ENV: development
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./api/src:/app/src
+      - ./api/nest-cli.json:/app/nest-cli.json
+      - ./api/node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run start:dev
+    depends_on:
+      - mongodb
+  mongodb:
+    container_name: mongo_container
+    image: mongo:latest
+    ports:
+      - '27010:27017'
+    volumes:
+      - mongodb_data:/data/db
+volumes:
+  mongodb_data:
