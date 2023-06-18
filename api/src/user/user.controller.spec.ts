@@ -87,16 +87,16 @@ describe('UserController', () => {
       id: expect.any(Number),
     });
   });
-  it('should update a user', async () => {
-    const id = 1;
-    const updateUser: UpdateUserDto = {
-      name: 'John Doe',
-    };
+   it('should update a user', async () => {
+    const userId = 1;
+    const updateUser: any = { name: 'Updated Name' };
 
-    expect(await controller.update(id, updateUser)).toEqual({
-      id: 1,
-      name: 'John Doe',
+    expect(await controller.update(userId, updateUser)).toEqual({
+      id: userId,
+      name: 'Updated Name',
       // Rest of the user properties should match the updated values
     });
   });
+
+
 });
