@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 const users = [
   {
@@ -31,6 +32,21 @@ describe('UserController', () => {
       users.push(newUser);
       return Promise.resolve(newUser);
     }),
+    update: jest
+      .fn()
+      .mockImplementation((userId: number, updateUserDto: UpdateUserDto) => {
+        const updatedUser = {
+          id: userId,
+          ...updateUserDto,
+        };
+        const index = users.findIndex((user) => user.id === userId);
+        if (index !== -1) {
+          users[index] = updatedUser;
+          return Promise.resolve(updatedUser);
+        } else {
+          return Promise.resolve(null);
+        }
+      }),
   };
 
   beforeEach(async () => {
@@ -69,6 +85,18 @@ describe('UserController', () => {
     };
     expect(await controller.create(newUser)).toMatchObject({
       id: expect.any(Number),
+    });
+  });
+  it('should update a user', async () => {
+    const id = 1;
+    const updateUser: UpdateUserDto = {
+      name: 'John Doe',
+    };
+
+    expect(await controller.update(id, updateUser)).toEqual({
+      id: 1,
+      name: 'John Doe',
+      // Rest of the user properties should match the updated values
     });
   });
 });
