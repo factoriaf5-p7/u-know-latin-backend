@@ -44,10 +44,10 @@ export class CreateUserDto {
   id_bought_content: number[];
 
   @IsNotEmpty()
-  @IsDate()
+  // @IsDate()
   created_at: Date;
 
   @IsNotEmpty()
-  @IsDate()
+  // @IsDate()
   created_update: Date;
 }
