@@ -4,7 +4,7 @@ import {
   IsString,
   IsNumber,
   IsDate,
-  IsArray
+  IsArray,
 } from 'class-validator';
 
 export class CreateUserDto {
