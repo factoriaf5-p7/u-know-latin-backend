@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
-export class User{
+export class User {
   @ApiProperty({ example: 'sebas riggio' })
   @Prop({ required: true })
   'name': string;
