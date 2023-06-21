@@ -14,7 +14,7 @@ export class User extends Document {
   @Prop()
   'user_name': string;
   @ApiProperty({ example: 'sebapassword1234' })
-  @Prop({ required: true })
+  @Prop({ required: true, select: false })
   'password': string;
   @ApiProperty({ example: 'sebas@mail.com' })
   @Prop({ required: true })

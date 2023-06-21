@@ -7,6 +7,39 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+  ) {}
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const createdUser = await this.userModel.create(createUserDto);
+    return createdUser;
+  }
+  async findAll(): Promise<User[]> {
+    return this.userModel.find().exec();
+  }
+  async findOne(id: string): Promise<User> {
+    return this.userModel.findOne({ _id: id }).exec();
+  }
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    Object.assign(updateUserDto);
+
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate({ _id: id })
+      .exec();
+     console.log(updatedUser)
+    return updatedUser;
+  }
+
+  async remove(id: string) {
+    const deletedUser = await this.userModel
+      .findByIdAndRemove({ _id: id })
+      .exec();
+    return deletedUser;
+  }
+}
+
+/* @Injectable()
+export class UserService {
   constructor(@InjectModel(User.name) private UserModel: Model<User>) {}
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.UserModel(createUserDto);
@@ -14,11 +47,11 @@ export class UserService {
   }
 
   async findAll() {
-    return `This action returns all user`;
+    return this.UserModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    return this.UserModel.findOne({ _id: id }).exec();
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -26,6 +59,7 @@ export class UserService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    return `This action removes a #${id} hola mundo`;
   }
 }
+ */
