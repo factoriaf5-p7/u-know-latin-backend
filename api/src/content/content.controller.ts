@@ -11,14 +11,19 @@ import { ContentService } from './content.service';
 import { CreateContentDto } from '../content/dto/create-content.dto';
 import { Content } from '../schemas/content.schema';
 import { UpdateContentDto } from './dto/update-content.dto';
+import { stringify } from 'querystring';
 
 @Controller('content')
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
 
-  @Post()
-  createContent(@Body() contentDto: CreateContentDto): Promise<Content> {
-    return this.contentService.createContent(contentDto);
+  @Post(':userId')
+  createContent(
+    @Param('userId') userId,
+    @Body() contentDto: CreateContentDto,
+  ): Promise<Content> {
+    console.log(userId, '----HOLA!-------');
+    return this.contentService.createContent(contentDto, userId);
   }
 
   @Get()

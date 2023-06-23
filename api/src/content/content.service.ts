@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Content } from '../schemas/content.schema';
+import { User } from '../schemas/users.schema';
+
 import { CreateContentDto } from '../content/dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
 
@@ -9,12 +11,21 @@ import { UpdateContentDto } from './dto/update-content.dto';
 export class ContentService {
   constructor(
     @InjectModel('Content') private readonly contentModel: Model<Content>,
+    @InjectModel('User') private readonly userModel: Model<User>,
   ) {}
 
-  async createContent(createContentDto: CreateContentDto): Promise<Content> {
-    const createdContent = await this.contentModel.create(createContentDto);
+  async createContent(
+    createContentDto: CreateContentDto,
+    _id: string,
+  ): Promise<Content> {
+    const createdContent = await this.contentModel.create(createContentDto); //creamos contenido
+    const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
+    const createContentId = createdContent._id; //extraemos el id del contenido
+    
+    console.log(createdContent._id); 
     return createdContent;
   }
+
   async findAll(): Promise<Content[]> {
     return this.contentModel.find().exec();
   }
