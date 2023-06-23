@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,25 +7,43 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private UserModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+  ) {}
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const createdUser = new this.UserModel(createUserDto);
-    return createdUser.save();
+    const createdUser = await this.userModel.create(createUserDto);
+    return createdUser;
   }
+<<<<<<< HEAD
 
   async findAll() {
     return `This action returns all user test`;
+=======
+  async findAll(): Promise<User[]> {
+    return this.userModel.find().exec();
+>>>>>>> origin/dev
+  }
+  async findOne(id: string): Promise<User> {
+    return this.userModel.findOne({ _id: id }).exec();
+  }
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new HttpException('User not Found', HttpStatus.BAD_REQUEST);
+    }
+    Object.assign(user, updateUserDto);
+
+    const updatedUser = await user.save();
+    return updatedUser;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const deletedUser = await this.userModel
+      .findByIdAndRemove({ _id: id })
+      .exec();
+    if (!deletedUser) {
+      throw new HttpException('User not usaga Found', HttpStatus.BAD_REQUEST);
+    }
+    return deletedUser;
   }
 }

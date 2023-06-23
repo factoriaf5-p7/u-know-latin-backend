@@ -6,10 +6,10 @@ import {
   IsBoolean,
 } from 'class-validator';
 
-export class ContentDto {
-  // @IsNotEmpty()
-  // @IsNumber()
-  // id: number;
+export class CreateContentDto {
+  @IsNotEmpty()
+  @IsString()
+  id: string;
 
   @IsNotEmpty()
   @IsString()
@@ -46,4 +46,6 @@ export class ContentDto {
   @IsString()
   @IsNotEmpty()
   content: string;
+
+
 }
