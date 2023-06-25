@@ -12,7 +12,9 @@ import { CreateContentDto } from '../content/dto/create-content.dto';
 import { Content } from '../schemas/content.schema';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { stringify } from 'querystring';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('content')
 @Controller('content')
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}

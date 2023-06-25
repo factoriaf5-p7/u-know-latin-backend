@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from 'src/schemas/users.schema';
+import { User } from '../schemas//users.schema';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -14,14 +14,8 @@ export class UserService {
     const createdUser = await this.userModel.create(createUserDto);
     return createdUser;
   }
-<<<<<<< HEAD
-
-  async findAll() {
-    return `This action returns all user test`;
-=======
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
->>>>>>> origin/dev
   }
   async findOne(id: string): Promise<User> {
     return this.userModel.findOne({ _id: id }).exec();
@@ -37,7 +31,7 @@ export class UserService {
     return updatedUser;
   }
 
-  async remove(id: string) {
+  async delete(id: string) {
     const deletedUser = await this.userModel
       .findByIdAndRemove({ _id: id })
       .exec();

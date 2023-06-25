@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ContentController } from './content.controller';
 import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
-import { ContentSchema } from 'src/schemas/content.schema';
+import { ContentSchema } from '../schemas/content.schema';
 
 const content = [
   {
@@ -20,19 +20,17 @@ const content = [
   },
 ];
 
-describe ('ContentController', () => {
-  let controller: ContentController; 
-  const mockContentController = {
-    findAll: jest.fn().mockImplementation(() => Promise.resolve({ content })), 
-    create: newContent = {
-      id: 2, 
-      ...createContentDto, 
-    }; 
-    content.push(newContent); 
-    return Promise.resolve(newContent); 
-  }
+// describe ('ContentController', () => {
+  // let controller: ContentController; 
+  // const mockContentController = {
+  //   findAll: jest.fn().mockImplementation(() => Promise.resolve({ content })), 
+  //   create: newContent = {
+  //     id: 2, 
+  //     ...createContentDto, 
+  //   }; 
+  //   content.push(newContent); 
+  //   return Promise.resolve(newContent); 
+  // }
 
 
-}
-
-)
+// })

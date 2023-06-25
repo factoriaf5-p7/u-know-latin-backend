@@ -15,6 +15,8 @@ export class User extends Document {
   @Prop({ required: true })
   'email': string;
   @Prop()
+  'role': string;
+  @Prop()
   'wallet_balance': number;
   @Prop()
   'chat': string;

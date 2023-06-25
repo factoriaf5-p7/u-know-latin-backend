@@ -3,11 +3,10 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from 'src/schemas/users.schema';
 
 const users = [
   {
-    id: 'string',
+    id: '234',
     name: 'John Doe',
     user_name: 'johndoe123',
     password: 'secretpassword',
@@ -42,12 +41,21 @@ describe('UserController', () => {
         };
         const index = users.findIndex((user) => user.id === userId);
         if (index !== -1) {
-          users[index] = updatedUser;
           return Promise.resolve(updatedUser);
         } else {
           return Promise.resolve(null);
         }
       }),
+    delete: jest.fn().mockImplementation((userId: string) => {
+      const index = users.findIndex((user) => user.id === userId);
+      users.splice(index, 1);
+      console.log(users[index], users);
+      if (index !== -1) {
+        return Promise.resolve(users[index]);
+      } else {
+        return Promise.resolve(null);
+      }
+    }),
   };
 
   beforeEach(async () => {
@@ -72,7 +80,7 @@ describe('UserController', () => {
 
   it('should create a new user', async () => {
     const newUser = {
-      id: 'string',
+      id: '222',
       name: 'Jane mick swagger',
       user_name: 'johndoe123',
       password: 'secretpassword',
@@ -85,17 +93,24 @@ describe('UserController', () => {
       created_update: new Date(),
     };
     expect(await controller.create(newUser)).toMatchObject({
-      id: expect.any(Number),
+      id: expect.any(String),
     });
   });
+
   it('should update a user', async () => {
-    const userId = 'string';
-    const updateUser: any = { name: 'Updated Name' };
+    const userId = '222';
+    const updateUser: UpdateUserDto = { name: 'Updated Name' };
 
     expect(await controller.update(userId, updateUser)).toEqual({
       id: userId,
       name: 'Updated Name',
-      // Rest of the user properties should match the updated values
+    });
+  });
+  it('should delete a user', async () => {
+    const userId = '234';
+
+    expect(await controller.delete(userId)).toEqual({
+      id: expect.any(String),
     });
   });
 });
