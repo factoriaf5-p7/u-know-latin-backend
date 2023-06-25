@@ -46,4 +46,11 @@ export class ContentController {
   remove(@Param('id') id: string) {
     return this.contentService.remove(id);
   }
+
+  // permitir que los usuarios registrados compren contenido
+  @Post(':id/buy')
+  buyContent(@Param('id') id: string) {
+    console.log(id, '--------vendido!!-------');
+    return this.contentService.buyContent(id);
+  }
 }

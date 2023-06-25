@@ -56,4 +56,19 @@ export class ContentService {
     }
     return deletedContent;
   }
+
+  async buyContent(id: string) {
+    const content = await this.contentModel.findById(id);
+
+    if (!content) {
+      throw new HttpException('Content not Found', HttpStatus.NOT_FOUND);
+    }
+    // Actualizar el estado del contenido a comprado
+    content.sales = true;
+
+    // Guardar los cambios en el contenido
+    await content.save();
+
+    return content;
+  }
 }
