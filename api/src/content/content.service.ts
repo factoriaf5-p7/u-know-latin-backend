@@ -20,9 +20,13 @@ export class ContentService {
   ): Promise<Content> {
     const createdContent = await this.contentModel.create(createContentDto); //creamos contenido
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
-    const createContentId = createdContent._id; //extraemos el id del contenido
-    
-    console.log(createdContent._id); 
+    console.log(user, 'service');
+    const createdContentId = createdContent._id; //extraemos el id del contenido
+    await this.userModel.updateOne(
+      { _id: user._id },
+      { $push: { id_published_content: createdContentId } },
+    );
+    user.save();
     return createdContent;
   }
 
