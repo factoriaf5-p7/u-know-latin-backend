@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { CreateUserDto } from '../../user/dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService } from '../../user/user.service';
+import { SingInDto } from '../dto/singin.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -12,6 +13,15 @@ export class AuthController {
   @Post('signup')
   async signup(@Body() user: CreateUserDto) {
     return this.userService.create(user)
+  }
+
+  @Post('signin')
+  async signin(@Body() signin: SingInDto) {
+    const { accessToken } = await this.authService.validateUser(
+      signin.email,
+      signin.password,
+    );
+    return { accessToken };
   }
 
   /* @Post('signin')
