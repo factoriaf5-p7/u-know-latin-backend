@@ -3,10 +3,11 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from 'src/schemas/users.schema';
 
 const users = [
   {
-    id: 1,
+    id: 'string',
     name: 'John Doe',
     user_name: 'johndoe123',
     password: 'secretpassword',
@@ -34,7 +35,7 @@ describe('UserController', () => {
     }),
     update: jest
       .fn()
-      .mockImplementation((userId: number, updateUserDto: UpdateUserDto) => {
+      .mockImplementation((userId: string, updateUserDto: UpdateUserDto) => {
         const updatedUser = {
           id: userId,
           ...updateUserDto,
@@ -71,7 +72,7 @@ describe('UserController', () => {
 
   it('should create a new user', async () => {
     const newUser = {
-      id: 3,
+      id: 'string',
       name: 'Jane mick swagger',
       user_name: 'johndoe123',
       password: 'secretpassword',
@@ -87,8 +88,8 @@ describe('UserController', () => {
       id: expect.any(Number),
     });
   });
-   it('should update a user', async () => {
-    const userId = 1;
+  it('should update a user', async () => {
+    const userId = 'string';
     const updateUser: any = { name: 'Updated Name' };
 
     expect(await controller.update(userId, updateUser)).toEqual({
@@ -97,6 +98,4 @@ describe('UserController', () => {
       // Rest of the user properties should match the updated values
     });
   });
-
-
 });
