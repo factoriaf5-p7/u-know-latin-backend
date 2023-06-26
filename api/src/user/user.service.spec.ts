@@ -102,7 +102,10 @@ expect(await service.create(newUser)).toMatchObject({
       created_update: new Date(),
   });
  });
- 
+ it('should delete a user',async()=>{
+  const userId = 'ObjectId';
+  expect(await service.delete(userId)).toEqual(userId)
+ });
 });
 
 
