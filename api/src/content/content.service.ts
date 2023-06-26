@@ -66,7 +66,7 @@ export class ContentService {
     return updateContent;
   }
 
-  async remove(id: string) {
+  async delete(id: string) {
     const deletedContent = await this.contentModel
       .findByIdAndRemove({ _id: id })
       .exec();
