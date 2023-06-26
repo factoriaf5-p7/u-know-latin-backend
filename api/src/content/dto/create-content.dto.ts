@@ -9,7 +9,7 @@ import {
 export class CreateContentDto {
   @IsNotEmpty()
   @IsString()
-  id: string;
+  Id: string;
 
   @IsNotEmpty()
   @IsString()
@@ -46,6 +46,4 @@ export class CreateContentDto {
   @IsString()
   @IsNotEmpty()
   content: string;
-
-
 }
