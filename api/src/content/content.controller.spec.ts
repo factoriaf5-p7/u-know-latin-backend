@@ -18,19 +18,4 @@ const content = [
     created_at: '2023-06-21T10:00:00Z',
     content: 'Example Content',
   },
-];
-
-// describe ('ContentController', () => {
-  // let controller: ContentController; 
-  // const mockContentController = {
-  //   findAll: jest.fn().mockImplementation(() => Promise.resolve({ content })), 
-  //   create: newContent = {
-  //     id: 2, 
-  //     ...createContentDto, 
-  //   }; 
-  //   content.push(newContent); 
-  //   return Promise.resolve(newContent); 
-  // }
-
-
-// })
+]

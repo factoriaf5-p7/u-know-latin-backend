@@ -17,31 +17,31 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('content')
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
-
+  //permitir que los usuarios registrados creen contenido
   @Post(':userId')
-  createContent(
+  createContent( 
     @Param('userId') userId,
     @Body() contentDto: CreateContentDto,
   ): Promise<Content> {
     console.log(userId, '----HOLA!-------');
     return this.contentService.createContent(contentDto, userId);
   }
-
+  //permitir que los usuarios registrados vean contenido
   @Get()
   findAll() {
     return this.contentService.findAll();
   }
-
+  //permitir que los usuarios registrados vean contenido por id
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contentService.findOne(id);
   }
-
+  //permitir que los usuarios registrados actualicen contenido
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateContentDto: UpdateContentDto) {
     return this.contentService.update(id, updateContentDto);
   }
-
+  //permitir que los usuarios registrados eliminen contenido
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.contentService.remove(id);
