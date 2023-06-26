@@ -19,7 +19,7 @@ export class ContentController {
   constructor(private readonly contentService: ContentService) {}
   //permitir que los usuarios registrados creen contenido
   @Post(':userId')
-  createContent( 
+  createContent(
     @Param('userId') userId,
     @Body() contentDto: CreateContentDto,
   ): Promise<Content> {

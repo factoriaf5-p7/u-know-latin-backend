@@ -84,6 +84,13 @@ export class ContentService {
     const boughtContent = await this.contentModel.find({
       _id: { $in: user.id_bought_content },
     }); // Buscar los contenidos comprados por el usuario
+
+    const contentId = boughtContent.map((content) => content._id); // Extraer el id de los contenidos comprados
+
+    const userBoughtContent = user.id_bought_content || []; // Si el usuario no tiene contenidos comprados, devolver un array vacío
+
+    userBoughtContent.push(...contentId); // Agregar los ids de contenidos comprados al array userBoughtContent
+
     // Devolver la lista de contenidos comprados
     return boughtContent;
   }
