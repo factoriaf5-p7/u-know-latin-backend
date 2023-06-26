@@ -15,7 +15,7 @@ export class Content extends Document {
   'price': number;
 
   @Prop()
-  'create_at': Date;
+  'created_at': Date;
 
   @Prop()
   'update': Date;
@@ -28,9 +28,6 @@ export class Content extends Document {
 
   @Prop()
   'sales': boolean;
-
-  @Prop()
-  'created_at:': Date;
 
   @Prop()
   'content': string;
