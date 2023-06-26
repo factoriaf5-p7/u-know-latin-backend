@@ -23,11 +23,30 @@ export class ContentService {
     console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
     await this.userModel.updateOne(
+      //relación entre id usario y id contenido
       { _id: user._id },
-      { $push: { id_published_content: createdContentId } },
+      { $push: { id_published_content: createdContentId } }, //push para poder hacerlo
+      //cada vez que se actualicen los contenidos
     );
     user.save();
     return createdContent;
+  }
+
+  //relación contenido y comprado
+
+  async buyContent(id: string) {
+    const content = await this.contentModel.findById(id);
+
+    if (!content) {
+      throw new HttpException('Content not Found', HttpStatus.NOT_FOUND);
+    }
+    // Actualizar el estado del contenido a comprado
+    content.sales = true;
+
+    // Guardar los cambios en el contenido
+    await content.save();
+
+    return content;
   }
 
   async findAll(): Promise<Content[]> {
@@ -47,7 +66,7 @@ export class ContentService {
     return updateContent;
   }
 
-  async remove(id: string) {
+  async delete(id: string) {
     const deletedContent = await this.contentModel
       .findByIdAndRemove({ _id: id })
       .exec();
