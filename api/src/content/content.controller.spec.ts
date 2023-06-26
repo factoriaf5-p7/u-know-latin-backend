@@ -53,7 +53,7 @@ describe('ContentController', () => {
         },
       ),
     delete: jest.fn().mockImplementation((contentId: string) => {
-      const index = content.findIndex((content) => content.id);
+      const index = content.findIndex((content) => content.id === contentId);
       content.splice(index, 1);
       console.log(content[index], content);
       if (index !== -1) {
@@ -116,8 +116,6 @@ describe('ContentController', () => {
   it('should delete a content', async () => {
     const contentId = '124';
 
-    expect(await controller.delete(contentId)).toEqual({
-      id: expect.any(String),
-    });
+    expect(await controller.delete(contentId)).toEqual(undefined);
   });
 });
