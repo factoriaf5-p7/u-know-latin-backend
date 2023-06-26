@@ -53,4 +53,9 @@ export class ContentController {
     console.log(id, '--------vendido!!-------');
     return this.contentService.buyContent(id, contentId);
   }
+  //permitir que los usuarios registrados vean el contenido que han comprado
+  @Get(':id/boughtContent')
+  getBoughtContent(@Param('id') id: string) {
+    return this.contentService.getBoughtContent(id);
+  }
 }
