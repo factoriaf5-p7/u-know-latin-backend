@@ -8,13 +8,14 @@ import { User } from '../../schemas/users.schema';
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   constructor(private authService: AuthService) {
     super({
-      usernameField: 'user_name',
       passwordField: 'password',
+      usernameField: 'email',
     });
   }
 
-  async validate(username: string, password: string) {
-    const user: Partial<User> = await this.authService.validateUser(username, password);
+  async validate(email: string, password: string) {
+    const user: any = await this.authService.validateUser(email, password);
+    console.log(user, 'sdsd')
     if (!user) throw new UnauthorizedException('User not found');
 
     return user;

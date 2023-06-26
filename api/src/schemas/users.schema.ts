@@ -28,6 +28,10 @@ export class User extends Document {
   'created_at:': Date;
   @Prop()
   'created_update': Date;
+  async comparePassword(password: string): Promise<boolean> {
+    console.log(password, 'paas');
+    return await bcrypt.compare(password.toString(), this.password);
+  }
 }
 export const UserSchema = SchemaFactory.createForClass(User);
 
@@ -39,9 +43,16 @@ UserSchema.pre('save', function (next) {
   bcrypt.genSalt(10, function (err, salt) {
     if (err) return next(err);
     bcrypt.hash(user.password, salt, function (err, hash) {
+      console.log(hash, 'hash');
       if (err) return next(err);
       user.password = hash;
       next();
     });
   });
 });
+
+UserSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+  const user = this as User;
+  console.log(candidatePassword, 'candidatePassword', user.password)
+  return bcrypt.compare(candidatePassword, user.password);
+};
