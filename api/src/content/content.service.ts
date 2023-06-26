@@ -75,4 +75,42 @@ export class ContentService {
     }
     return deletedContent;
   }
+
+  async buyContent(id: string, contentId: string) {
+    const content = await this.contentModel.findById(contentId);
+    if (!content) {
+      throw new HttpException('Content not Found', HttpStatus.NOT_FOUND);
+    }
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
+    }
+    user.id_bought_content.push(parseInt(contentId)); // Agregar el id content comprado al array. parse pa´ convertir contentId a número
+    await user.save(); // Guardar los cambios en el user
+
+    content.sales = true; // Actualizar el estado del contenido a comprado
+    await content.save(); // Guardar los cambios en el contenido
+
+    return content;
+  }
+
+  async getBoughtContent(id: string) {
+    const user = await this.userModel.findById(id); //Buscar usuario por id
+    if (!user) {
+      throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
+    } // Si el usuario no existe: "Usuario no encontrado"
+
+    const boughtContent = await this.contentModel.find({
+      _id: { $in: user.id_bought_content },
+    }); // Buscar los contenidos comprados por el usuario
+
+    const contentId = boughtContent.map((content) => content._id); // Extraer el id de los contenidos comprados
+
+    const userBoughtContent = user.id_bought_content || []; // Si el usuario no tiene contenidos comprados, devolver un array vacío
+
+    userBoughtContent.push(...contentId); // Agregar los ids de contenidos comprados al array userBoughtContent
+
+    // Devolver la lista de contenidos comprados
+    return boughtContent;
+  }
 }
