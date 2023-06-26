@@ -23,10 +23,14 @@ export class ContentController {
     @Param('userId') userId,
     @Body() contentDto: CreateContentDto,
   ): Promise<Content> {
-    console.log(userId, '----HOLA!-------');
     return this.contentService.createContent(contentDto, userId);
   }
-
+  // permitir que los usuarios registrados compren contenido
+  @Post(':id/buy')
+  buyContent(@Param('id') id: string) {
+    console.log(id, '--------vendido!!-------');
+    return this.contentService.buyContent(id);
+  }
   @Get()
   findAll() {
     return this.contentService.findAll();
