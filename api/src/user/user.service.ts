@@ -36,7 +36,7 @@ export class UserService {
       .findByIdAndRemove({ _id: id })
       .exec();
     if (!deletedUser) {
-      throw new HttpException('User not usaga Found', HttpStatus.BAD_REQUEST);
+      throw new HttpException('User not Found', HttpStatus.BAD_REQUEST);
     }
     return deletedUser;
   }
