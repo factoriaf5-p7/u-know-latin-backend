@@ -30,9 +30,6 @@ export class Content extends Document {
   'sales': boolean;
 
   @Prop()
-  'created_at:': Date;
-
-  @Prop()
   'content': string;
 }
 export const ContentSchema = SchemaFactory.createForClass(Content);

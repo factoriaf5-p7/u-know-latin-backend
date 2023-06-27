@@ -17,6 +17,7 @@ const content = [
     sales: true,
     content: 'Lorem ipsum dolor sit amet...',
   },
+<<<<<<< HEAD
 ];
 
 describe('ContentController', () => {
@@ -119,3 +120,6 @@ describe('ContentController', () => {
     expect(await controller.delete(contentId)).toEqual(undefined);
   });
 });
+=======
+]
+>>>>>>> feature/practica-hui

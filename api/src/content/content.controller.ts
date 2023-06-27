@@ -17,7 +17,7 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('content')
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
-
+  //permitir que los usuarios registrados creen contenido
   @Post(':userId')
   createContent(
     @Param('userId') userId,
@@ -25,29 +25,36 @@ export class ContentController {
   ): Promise<Content> {
     return this.contentService.createContent(contentDto, userId);
   }
-  // permitir que los usuarios registrados compren contenido
-  @Post(':id/buy')
-  buyContent(@Param('id') id: string) {
-    console.log(id, '--------vendido!!-------');
-    return this.contentService.buyContent(id);
-  }
+  
   @Get()
   findAll() {
     return this.contentService.findAll();
   }
-
+  //permitir que los usuarios registrados vean contenido por id
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contentService.findOne(id);
   }
-
+  //permitir que los usuarios registrados actualicen contenido
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateContentDto: UpdateContentDto) {
     return this.contentService.update(id, updateContentDto);
   }
-
+  //permitir que los usuarios registrados eliminen contenido
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.contentService.delete(id);
+  }
+
+  //permitir que los usuarios registrados compren contenido
+  @Post(':id/buy/:contentId')
+  buyContent(@Param('id') id: string, @Param('contentId') contentId: string) {
+    console.log(id, '--------vendido!!-------');
+    return this.contentService.buyContent(id, contentId);
+  }
+  //permitir que los usuarios registrados vean el contenido que han comprado
+  @Get(':id/boughtContent')
+  getBoughtContent(@Param('id') id: string) {
+    return this.contentService.getBoughtContent(id);
   }
 }
