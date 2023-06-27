@@ -65,9 +65,7 @@ describe('UserService', () => {
   });
   it('should return a users list', async () => {
     expect(await service.findAll()).toMatchObject(users);
-   /*  const userList = await service.findAll();
-    expect(Array.isArray(userList)).toBe(true);
-    expect(userList).toEqual(expect.arrayContaining(users)); */
+   
   });
   
  it('should create a new user',async ()=>{
