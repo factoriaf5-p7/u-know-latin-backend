@@ -90,12 +90,11 @@ describe('ContentController', () => {
       title: 'AprendiendoCss',
       description: 'Aprenderas en pocos pasos todo lo relacionado a css',
       price: 10.99,
-      create_at: new Date('2023-06-15'),
+      created_at: new Date('2023-06-15'),
       update: new Date('2023-06-15'),
       category: 'CSS',
       dificulty: 1,
       sales: true,
-      created_at: new Date('2023-06-15'),
       content: 'Lorem ipsum dolor sit amet...',
     };
     expect(await controller.createContent('124', newContent)).toMatchObject({

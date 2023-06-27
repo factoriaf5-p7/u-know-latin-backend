@@ -15,7 +15,7 @@ export class Content extends Document {
   'price': number;
 
   @Prop()
-  'create_at': Date;
+  'created_at': Date;
 
   @Prop()
   'update': Date;

@@ -10,7 +10,7 @@ import { UpdateContentDto } from './dto/update-content.dto';
 @Injectable()
 export class ContentService {
   constructor(
-    @InjectModel('Content') private readonly contentModel: Model<Content>,
+    @InjectModel(Content.name) private readonly contentModel: Model<Content>,
     @InjectModel('User') private readonly userModel: Model<User>,
   ) {}
 
