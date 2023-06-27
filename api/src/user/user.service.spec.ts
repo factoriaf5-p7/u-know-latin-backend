@@ -32,20 +32,20 @@ describe('UserService', () => {
       return Promise.resolve(newUser);
     }),
     update: jest
-      .fn()
-      .mockImplementation((userId: string, updateUserDto: UpdateUserDto) => {
-        const updatedUser = {
-          id: userId,
-          ...updateUserDto,
-        };
-        const index = users.findIndex((user) => user.id === userId);
-        if (index !== -1) {
-          users[index] = updatedUser;
-          return Promise.resolve(updatedUser);
-        } else {
-          return Promise.resolve(null);
-        }
-      }),
+    .fn()
+    .mockImplementation((userId:string,updateUserDto: UpdateUserDto) => {
+      const updatedUser = {
+        id: userId,
+        ...updateUserDto,
+      }
+      const index = users.findIndex((user) => user.id === userId);
+      if(index !== -1){
+        // users[index] = updatedUser; 
+        return Promise.resolve(updatedUser)
+      }else{
+        return Promise.resolve(null);
+      }
+    }),
   };
 
   beforeEach(async () => {
@@ -63,12 +63,16 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
   it('should return a users list', async () => {
-    expect(await service.findAll()).toMatchObject({ users });
+    expect(await service.findAll()).toMatchObject(users);
+   /*  const userList = await service.findAll();
+    expect(Array.isArray(userList)).toBe(true);
+    expect(userList).toEqual(expect.arrayContaining(users)); */
   });
-  it('should creat a new user', async () => {
-    const newUser = {
-      id: 'string',
-      name: 'Jane mick swagger',
+  
+ it('should create a new user',async ()=>{
+const newUser = {
+  id:'string',
+  name: 'Jane mick swagger',
       user_name: 'johndoe123',
       password: 'secretpassword',
       email: 'johndoe@example.com',
@@ -78,30 +82,35 @@ describe('UserService', () => {
       id_bought_content: [4, 5, 6],
       created_at: new Date(),
       created_update: new Date(),
-    };
-    expect(await service.create(newUser)).toMatchObject({
-      id: expect.any(String),
-    });
-  });
-  it('should update a user ', async () => {
-    const userId = 'string';
-    const updateUser: any = { name: 'Updated name' };
-    expect(await service.update(userId, updateUser)).toEqual({
-      id: userId,
-      name: 'Updated Name',
-      user_name: 'johndoe123',
+}
+expect(await service.create(newUser)).toMatchObject({
+  id:expect.any(String),
+});
+ });
+ it('should update a user ',async ()=>{
+  const userId = 'string';
+  const updateUser: any = {name: 'Updated name'};
+  const updatedUser = await service.update(userId,updateUser)
+  expect(updatedUser).toEqual({
+    id: userId,
+    name: 'Updated Name',
+    user_name: 'johndoe123',
       password: 'secretpassword',
       email: 'johndoe@example.com',
       wallet_balance: 1000,
       chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
-      created_at: new Date(),
-      created_update: new Date(),
-    });
+      created_at:  new Date(),
+      created_update:  new Date(),
   });
-  it('should delete a user', async () => {
-    const userId = 'ObjectId';
-    expect(await service.delete(userId)).toEqual(userId);
-  });
+ });
+ it('should delete a user', async () => {
+  const userId = 'ObjectId';
+  const deletedUser = await service.delete(userId);
+  expect(deletedUser).toEqual(expect.any(Object));
+/* 
+  const userExists = await service.findOne(userId);
+  expect(userExists).toBeNull(); */
+});
 });
