@@ -68,11 +68,16 @@ export class ContentService {
     if (!user) {
       throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
     }
-    user.id_bought_content.push(parseInt(contentId)); // Agregar el id content comprado al array. parse pa´ convertir contentId a número
-    await user.save(); // Guardar los cambios en el user
 
-    content.sales = true; // Actualizar el estado del contenido a comprado
-    await content.save(); // Guardar los cambios en el contenido
+    if (user.id_bought_content.includes(parseInt(contentId))) {
+      throw new HttpException('Content already purchased', HttpStatus.CONFLICT);
+    }
+
+    user.id_bought_content.push(parseInt(contentId));
+    await user.save();
+
+    content.sales = true;
+    await content.save();
 
     return content;
   }
