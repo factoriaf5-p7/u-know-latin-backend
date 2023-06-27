@@ -31,6 +31,7 @@ describe('UserService', () => {
       users.push(newUser);
       return Promise.resolve(newUser);
     }),
+    delete:jest.fn().mockReturnValue(users[0]),
     update: jest
     .fn()
     .mockImplementation((userId:string,updateUserDto: UpdateUserDto) => {
@@ -89,28 +90,30 @@ expect(await service.create(newUser)).toMatchObject({
  });
  it('should update a user ',async ()=>{
   const userId = 'string';
-  const updateUser: any = {name: 'Updated name'};
+  const updateUser = {name: 'Updated name'};
   const updatedUser = await service.update(userId,updateUser)
   expect(updatedUser).toEqual({
-    id: userId,
-    name: 'Updated Name',
-    user_name: 'johndoe123',
-      password: 'secretpassword',
-      email: 'johndoe@example.com',
-      wallet_balance: 1000,
-      chat: 'Lorem ipsum dolor sit amet...',
-      id_published_content: [1, 2, 3],
-      id_bought_content: [4, 5, 6],
-      created_at:  new Date(),
-      created_update:  new Date(),
+   id:userId,
+    name: 'Updated name',
+   
   });
  });
  it('should delete a user', async () => {
   const userId = 'ObjectId';
   const deletedUser = await service.delete(userId);
-  expect(deletedUser).toEqual(expect.any(Object));
-/* 
-  const userExists = await service.findOne(userId);
-  expect(userExists).toBeNull(); */
+  expect(deletedUser).toMatchObject( {
+    id: 'string',
+    name: 'John Doe',
+    user_name: 'johndoe123',
+    password: 'secretpassword',
+    email: 'johndoe@example.com',
+    wallet_balance: 1000,
+    chat: 'Lorem ipsum dolor sit amet...',
+    id_published_content: [1, 2, 3],
+    id_bought_content: [4, 5, 6],
+    created_at: new Date('2023-06-15'),
+    created_update: new Date('2023-06-16'),
+  },);
+ 
 });
 });
