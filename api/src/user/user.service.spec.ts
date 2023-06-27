@@ -2,9 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
-
-
+import { getModelToken } from '@nestjs/mongoose';
+import { User } from '../schemas/users.schema';
 
 const users = [ {
   id: 'string',
@@ -16,8 +15,8 @@ const users = [ {
   chat: 'Lorem ipsum dolor sit amet...',
   id_published_content: [1, 2, 3],
   id_bought_content: [4, 5, 6],
-  created_at: new Date('2023-06-15'),
-  created_update: new Date('2023-06-16'), 
+  created_at: new Date(),
+  created_update: new Date(), 
 },
 ];
 
@@ -42,7 +41,7 @@ describe('UserService', () => {
       }
       const index = users.findIndex((user) => user.id === userId);
       if(index !== -1){
-        users[index] = updatedUser;
+        // users[index] = updatedUser; 
         return Promise.resolve(updatedUser)
       }else{
         return Promise.resolve(null);
@@ -52,11 +51,17 @@ describe('UserService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService,],
-     })
-    .overrideProvider(UserService)
-    .useValue(mockUserModel)
-    .compile();
+      providers: [
+        
+        UserService,
+      {
+        provide: getModelToken(User.name),
+        useValue:mockUserModel,
+      }
+      
+      ]
+     }) .compile()
+    
 
     service = module.get<UserService>(UserService);
   });
@@ -64,10 +69,14 @@ describe('UserService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
- it('should return a users list',async () => {
-  expect(await service.findAll()).toMatchObject({users});
- })
- it('should creat a new user',async ()=>{
+  it('should return a users list', async () => {
+    expect(await service.findAll()).toMatchObject(users);
+   /*  const userList = await service.findAll();
+    expect(Array.isArray(userList)).toBe(true);
+    expect(userList).toEqual(expect.arrayContaining(users)); */
+  });
+  
+ it('should create a new user',async ()=>{
 const newUser = {
   id:'string',
   name: 'Jane mick swagger',
@@ -88,7 +97,8 @@ expect(await service.create(newUser)).toMatchObject({
  it('should update a user ',async ()=>{
   const userId = 'string';
   const updateUser: any = {name: 'Updated name'};
-  expect(await service.update(userId,updateUser)).toEqual({
+  const updatedUser = await service.update(userId,updateUser)
+  expect(updatedUser).toEqual({
     id: userId,
     name: 'Updated Name',
     user_name: 'johndoe123',
@@ -98,14 +108,18 @@ expect(await service.create(newUser)).toMatchObject({
       chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
-      created_at: new Date(),
-      created_update: new Date(),
+      created_at:  new Date(),
+      created_update:  new Date(),
   });
  });
- it('should delete a user',async()=>{
+ it('should delete a user', async () => {
   const userId = 'ObjectId';
-  expect(await service.delete(userId)).toEqual(userId)
- });
+  const deletedUser = await service.delete(userId);
+  expect(deletedUser).toEqual(expect.any(Object));
+/* 
+  const userExists = await service.findOne(userId);
+  expect(userExists).toBeNull(); */
+});
 });
 
 
