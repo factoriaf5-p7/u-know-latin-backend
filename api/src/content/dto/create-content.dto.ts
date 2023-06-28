@@ -7,9 +7,7 @@ import {
 } from 'class-validator';
 
 export class CreateContentDto {
-  @IsNotEmpty()
-  @IsString()
-  Id: string;
+  
 
   @IsNotEmpty()
   @IsString()
