@@ -9,8 +9,11 @@ import { UpdateContentDto } from './dto/update-content.dto';
 
 @Injectable()
 export class ContentService {
+  create(newContent: { id: string; title: string; description: string; price: number; created_at: Date; update: Date; category: string; dificulty: number; sales: boolean; content: string; }): any {
+    throw new Error('Method not implemented.');
+  }
   constructor(
-    @InjectModel('Content') private readonly contentModel: Model<Content>,
+    @InjectModel(Content.name) private readonly contentModel: Model<Content>,
     @InjectModel('User') private readonly userModel: Model<User>,
   ) {}
 
@@ -23,8 +26,10 @@ export class ContentService {
     console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
     await this.userModel.updateOne(
+      //relación entre id usario y id contenido
       { _id: user._id },
-      { $push: { id_published_content: createdContentId } },
+      { $push: { id_published_content: createdContentId } }, //push para poder hacerlo
+      //cada vez que se actualicen los contenidos
     );
     user.save();
     return createdContent;
@@ -47,7 +52,7 @@ export class ContentService {
     return updateContent;
   }
 
-  async remove(id: string) {
+  async delete(id: string) {
     const deletedContent = await this.contentModel
       .findByIdAndRemove({ _id: id })
       .exec();
@@ -55,5 +60,48 @@ export class ContentService {
       throw new HttpException('Content not Found', HttpStatus.BAD_REQUEST);
     }
     return deletedContent;
+  }
+
+  async buyContent(id: string, contentId: string) {
+    const content = await this.contentModel.findById(contentId);
+    if (!content) {
+      throw new HttpException('Content not Found', HttpStatus.NOT_FOUND);
+    }
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
+    }
+
+    if (user.id_bought_content.includes(parseInt(contentId))) {
+      throw new HttpException('Content already purchased', HttpStatus.CONFLICT);
+    }
+
+    user.id_bought_content.push(parseInt(contentId));
+    await user.save();
+
+    content.sales = true;
+    await content.save();
+
+    return content;
+  }
+
+  async getBoughtContent(id: string) {
+    const user = await this.userModel.findById(id); //Buscar usuario por id
+    if (!user) {
+      throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
+    } // Si el usuario no existe: "Usuario no encontrado"
+
+    const boughtContent = await this.contentModel.find({
+      _id: { $in: user.id_bought_content },
+    }); // Buscar los contenidos comprados por el usuario
+
+    const contentId = boughtContent.map((content) => content._id); // Extraer el id de los contenidos comprados
+
+    const userBoughtContent = user.id_bought_content || []; // Si el usuario no tiene contenidos comprados, devolver un array vacío
+
+    userBoughtContent.push(...contentId); // Agregar los ids de contenidos comprados al array userBoughtContent
+
+    // Devolver la lista de contenidos comprados
+    return boughtContent;
   }
 }
