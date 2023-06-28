@@ -33,20 +33,17 @@ describe('UserService', () => {
     }),
     delete:jest.fn().mockReturnValue(users[0]),
     update: jest
-    .fn()
-    .mockImplementation((userId:string,updateUserDto: UpdateUserDto) => {
-      const updatedUser = {
-        id: userId,
-        ...updateUserDto,
-      }
-      const index = users.findIndex((user) => user.id === userId);
-      if(index !== -1){
-        // users[index] = updatedUser; 
-        return Promise.resolve(updatedUser)
-      }else{
-        return Promise.resolve(null);
-      }
-    }),
+      .fn()
+      .mockImplementation((userId: string, updateUserDto: UpdateUserDto) => {
+        const updatedUser = { id: userId, ...updateUserDto };
+        const index = users.findIndex((user) => user.id === userId);
+        if (index !== -1) {
+          users[index] = updatedUser;
+          return Promise.resolve(updatedUser);
+        } else {
+          return Promise.resolve(null);
+        }
+      }),
   };
 
   beforeEach(async () => {
@@ -89,11 +86,18 @@ expect(await service.create(newUser)).toMatchObject({
  it('should update a user ',async ()=>{
   const userId = 'string';
   const updateUser = {name: 'Updated name'};
-  const updatedUser = await service.update(userId,updateUser)
-  expect(updatedUser).toEqual({
-   id:userId,
-    name: 'Updated name',
-   
+  expect(await service.update(userId,updateUser)).toEqual({
+    id: userId,
+    name: 'Updated Name',
+    user_name: 'johndoe123',
+      password: 'secretpassword',
+      email: 'johndoe@example.com',
+      wallet_balance: 1000,
+      chat: 'Lorem ipsum dolor sit amet...',
+      id_published_content: [1, 2, 3],
+      id_bought_content: [4, 5, 6],
+      created_at: new Date(),
+      created_update: new Date(),
   });
  });
  it('should delete a user', async () => {

@@ -55,7 +55,6 @@ describe('ContentController', () => {
     delete: jest.fn().mockImplementation((contentId: string) => {
       const index = content.findIndex((content) => content.id === contentId);
       content.splice(index, 1);
-      console.log(content[index], content);
       if (index !== -1) {
         return Promise.resolve(content[index]);
       } else {

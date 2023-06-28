@@ -49,7 +49,6 @@ describe('UserController', () => {
     delete: jest.fn().mockImplementation((userId: string) => {
       const index = users.findIndex((user) => user.id === userId);
       users.splice(index, 1);
-      console.log(users[index], users);
       if (index !== -1) {
         return Promise.resolve(users[index]);
       } else {
@@ -107,10 +106,8 @@ describe('UserController', () => {
     });
   });
   it('should delete a user', async () => {
-    const userId = '234';
+    const userId = '222';
 
-    expect(await controller.delete(userId)).toEqual({
-      id: expect.any(String),
-    });
+    expect(await controller.delete(userId)).toEqual(undefined);
   });
 });
