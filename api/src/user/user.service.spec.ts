@@ -25,38 +25,35 @@ describe('UserService', () => {
   let service: UserService;
   const mockUserModel = {
     findAll: jest.fn().mockReturnValue(Promise.resolve(users)),
-    create: jest.fn().mockImplementation((createUserDto:CreateUserDto) => {
-    const newUser = {
-      id: 'ObjectId',
-      ...createUserDto
+    create: jest.fn().mockImplementation((createUserDto: CreateUserDto) => {
+      const newUser = {
+        id: 'ObjectId',
+        ...createUserDto,
       };
       users.push(newUser);
-      return Promise.resolve(newUser)
+      return Promise.resolve(newUser);
     }),
     update: jest
-    .fn()
-    .mockImplementation((userId:string,updateUserDto: UpdateUserDto) => {
-      const updatedUser = {
-        id: userId,
-        ...updateUserDto,
-      }
-      const index = users.findIndex((user) => user.id === userId);
-      if(index !== -1){
-        users[index] = updatedUser;
-        return Promise.resolve(updatedUser)
-      }else{
-        return Promise.resolve(null);
-      }
-    }),
+      .fn()
+      .mockImplementation((userId: string, updateUserDto: UpdateUserDto) => {
+        const updatedUser = { id: userId, ...updateUserDto };
+        const index = users.findIndex((user) => user.id === userId);
+        if (index !== -1) {
+          users[index] = updatedUser;
+          return Promise.resolve(updatedUser);
+        } else {
+          return Promise.resolve(null);
+        }
+      }),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService,],
-     })
-    .overrideProvider(UserService)
-    .useValue(mockUserModel)
-    .compile();
+      providers: [UserService],
+    })
+      .overrideProvider(UserService)
+      .useValue(mockUserModel)
+      .compile();
 
     service = module.get<UserService>(UserService);
   });
@@ -87,7 +84,7 @@ expect(await service.create(newUser)).toMatchObject({
  });
  it('should update a user ',async ()=>{
   const userId = 'string';
-  const updateUser: any = {name: 'Updated name'};
+  const updateUser = {name: 'Updated name'};
   expect(await service.update(userId,updateUser)).toEqual({
     id: userId,
     name: 'Updated Name',
@@ -107,8 +104,3 @@ expect(await service.create(newUser)).toMatchObject({
   expect(await service.delete(userId)).toEqual(userId)
  });
 });
-
-
-
-
-

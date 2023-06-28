@@ -12,13 +12,13 @@ export class User extends Document {
   'user_name': string;
   @Prop({ required: true, select: false })
   'password': string;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   'email': string;
   @Prop()
   'role': string;
   @Prop()
   'wallet_balance': number;
-  @Prop()
+  @Prop() 
   'chat': string;
   @Prop()
   'id_published_content': number[];
@@ -29,7 +29,6 @@ export class User extends Document {
   @Prop()
   'created_update': Date;
   async comparePassword(password: string): Promise<boolean> {
-    console.log(password, 'paas');
     return await bcrypt.compare(password.toString(), this.password);
   }
 }
@@ -43,7 +42,6 @@ UserSchema.pre('save', function (next) {
   bcrypt.genSalt(10, function (err, salt) {
     if (err) return next(err);
     bcrypt.hash(user.password, salt, function (err, hash) {
-      console.log(hash, 'hash');
       if (err) return next(err);
       user.password = hash;
       next();
@@ -53,6 +51,5 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
   const user = this as User;
-  console.log(candidatePassword, 'candidatePassword', user.password)
   return bcrypt.compare(candidatePassword, user.password);
 };

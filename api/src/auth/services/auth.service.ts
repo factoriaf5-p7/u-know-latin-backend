@@ -10,7 +10,6 @@ export class AuthService {
   constructor(private jwtService: JwtService,@InjectModel(User.name) private userModel: Model<User>) {}
   async validateUser(email: string, password: string) {
     const user = await this.userModel.findOne({ email }).select('+password').exec();
-    console.log(await user.comparePassword(password), 's3ewe');
     if (user && (await user.comparePassword(password))) {
       return user;
     }

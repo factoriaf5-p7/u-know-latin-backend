@@ -11,8 +11,17 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const createdUser = await this.userModel.create(createUserDto);
-    return createdUser;
+    try {
+      const createdUser = await this.userModel.create(createUserDto);
+      return createdUser;
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new HttpException(
+          'Email or username already exists',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
   }
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
@@ -22,6 +31,7 @@ export class UserService {
   }
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userModel.findById(id);
+    console.log(user, 'dsdsdsd');
     if (!user) {
       throw new HttpException('User not Found', HttpStatus.BAD_REQUEST);
     }
