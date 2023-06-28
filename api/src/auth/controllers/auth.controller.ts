@@ -17,7 +17,6 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   login(@Req() req: Request) {
-    console.log(req.user)
-    return this.authService.generateToken(req.user);
+    return this.authService.generateToken(req.body);
   }
 }
