@@ -16,7 +16,7 @@ import { UserService } from 'src/user/user.service';
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
         return {
-          secret: 'secret',
+          secret: configService.get('JWT_SECRET', 'dsds'),
           signOptions: {
             expiresIn: '10d',
           },
