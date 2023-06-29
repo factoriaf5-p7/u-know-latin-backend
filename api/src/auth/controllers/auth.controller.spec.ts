@@ -1,24 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from '../services/auth.service';
-import { UserService } from '../../user/user.service';
-import { CreateUserDto } from '../../user/dto/create-user.dto';
-import { Request } from 'express';
+import { Request } from 'express'; 
 
 describe('AuthController', () => {
-  let authController: AuthController;
-  let authService: AuthService;
-  let userService: UserService;
+  let controller: AuthController;
+  let service: AuthService;
+  const mockAuthService = {
+    signUp: jest
+      .fn()
+      .mockReturnValue(Promise.resolve({access_token: 'token here'}))
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthService, UserService],
-    }).compile();
+      providers: [ AuthService ]
+    })
+      .overrideProvider(AuthService)
+      .useValue(mockAuthService)
+      .compile();
 
-    authController = module.get<AuthController>(AuthController);
-    authService = module.get<AuthService>(AuthService);
-    userService = module.get<UserService>(UserService);
+    controller = module.get<AuthController>(AuthController);
+    service = module.get<AuthService>(AuthService);
   });
 
   describe('signup', () => {

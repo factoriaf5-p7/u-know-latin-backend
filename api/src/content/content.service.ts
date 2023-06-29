@@ -9,9 +9,6 @@ import { UpdateContentDto } from './dto/update-content.dto';
 
 @Injectable()
 export class ContentService {
-  create(newContent: { id: string; title: string; description: string; price: number; created_at: Date; update: Date; category: string; dificulty: number; sales: boolean; content: string; }): any {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     @InjectModel(Content.name) private readonly contentModel: Model<Content>,
     @InjectModel('User') private readonly userModel: Model<User>,
@@ -23,6 +20,7 @@ export class ContentService {
   ): Promise<Content> {
     const createdContent = await this.contentModel.create(createContentDto); //creamos contenido
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
+    console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
     await this.userModel.updateOne(
       //relación entre id usario y id contenido
