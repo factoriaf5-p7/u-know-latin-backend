@@ -7,11 +7,13 @@ import {
 } from 'class-validator';
 
 export class CreateContentDto {
-  
-
   @IsNotEmpty()
   @IsString()
   title: string;
+
+  @IsString()
+  @IsNotEmpty()
+  'author': string;
 
   @IsString()
   @IsNotEmpty()
