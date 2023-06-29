@@ -4,7 +4,6 @@ import { AuthService } from '../services/auth.service';
 import { UserService } from '../../user/user.service';
 import { CreateUserDto } from '../../user/dto/create-user.dto';
 import { Request } from 'express';
-import { ParamsDictionary, ParsedQs } from 'express-serve-static-core';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -24,7 +23,7 @@ describe('AuthController', () => {
 
   describe('signup', () => {
     it('should create a new user', async () => {
-      const createUserDto: CreateUserDto = {
+      const createUserDto: any = {
         // Provide the necessary properties for creating a user
         // Replace these with the actual user data for testing
         user_name: 'testuser',
@@ -46,7 +45,7 @@ describe('AuthController', () => {
       };
       
 
-      jest.spyOn(userService, 'create').mockResolvedValue(createdUser);
+      jest.spyOn(userService, 'create').mockResolvedValue(createdUser as any);
 
       const result = await authController.signup(createUserDto);
 
@@ -58,7 +57,7 @@ describe('AuthController', () => {
   describe('login', () => {
     it('should generate a token for the authenticated user', async () => {
       // Create a mock Request object
-      const req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>> = {
+      const req: any = {
         get: jest.fn(),
         header: jest.fn(),
         accepts: jest.fn(),
