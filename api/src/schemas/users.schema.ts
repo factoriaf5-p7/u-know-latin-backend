@@ -18,12 +18,12 @@ export class User extends Document {
   'role': string;
   @Prop()
   'wallet_balance': number;
-  @Prop() 
+  @Prop()
   'chat': string;
   @Prop()
-  'id_published_content': number[];
+  'id_published_content': string[];
   @Prop()
-  'id_bought_content': number[];
+  'id_bought_content': string[];
   @Prop()
   'created_at:': Date;
   @Prop()

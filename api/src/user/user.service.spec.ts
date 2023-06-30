@@ -38,7 +38,6 @@ describe('UserService', () => {
         const updatedUser = { id: userId, ...updateUserDto };
         const index = users.findIndex((user) => user.id === userId);
         if (index !== -1) {
-          users[index] = updatedUser;
           return Promise.resolve(updatedUser);
         } else {
           return Promise.resolve(null);

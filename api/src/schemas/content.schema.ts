@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Document } from 'mongoose';
+import { CommentSchema } from './comment.schema';
 
 export type ContentDocument = HydratedDocument<Content>;
 
@@ -8,8 +9,8 @@ export class Content extends Document {
   @Prop({ required: true })
   'title': string;
 
-  @Prop({ required: true, unique: true })
-  'author': string;
+  @Prop()
+  'author_id': string;
 
   @Prop()
   'description': string;
@@ -34,5 +35,8 @@ export class Content extends Document {
 
   @Prop()
   'content': string;
+
+  @Prop([CommentSchema])
+  comments: Comment[];
 }
 export const ContentSchema = SchemaFactory.createForClass(Content);

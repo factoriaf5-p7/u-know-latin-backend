@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Content } from '../schemas/content.schema';
+import { Content, ContentDocument } from '../schemas/content.schema';
 import { User } from '../schemas/users.schema';
-
 import { CreateContentDto } from '../content/dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
 
@@ -22,13 +21,19 @@ export class ContentService {
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
     console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
+    await this.contentModel.updateOne(
+      { createdContentId },
+      { $push: { author_id: user._id } },
+    );
     await this.userModel.updateOne(
       //relación entre id usario y id contenido
       { _id: user._id },
-      { $push: { id_published_content: createdContentId } }, //push para poder hacerlo
-      //cada vez que se actualicen los contenidos
+      {
+        $push: { id_published_content: { createdContentId } },
+      },
     );
-    user.save();
+    await createdContent.save();
+    await user.save();
     return createdContent;
   }
 
@@ -69,11 +74,12 @@ export class ContentService {
       throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
     }
 
-    if (user.id_bought_content.includes(parseInt(contentId))) {
+    if (user.id_bought_content.includes(contentId)) {
       throw new HttpException('Content already purchased', HttpStatus.CONFLICT);
     }
 
-    user.id_bought_content.push(parseInt(contentId));
+    user.id_bought_content.push(contentId);
+
     await user.save();
 
     content.sales = true;
@@ -82,23 +88,25 @@ export class ContentService {
     return content;
   }
 
-  async getBoughtContent(id: string) {
-    const user = await this.userModel.findById(id); //Buscar usuario por id
+  async getBoughtContent(id: string): Promise<Content[]> {
+    // Buscar el usuario por su ID y verificar si el usuario existe
+    const user: User = await this.userModel.findById(id);
     if (!user) {
-      throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
-    } // Si el usuario no existe: "Usuario no encontrado"
-
-    const boughtContent = await this.contentModel.find({
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    // Buscar los contenidos comprados utilizando los identificadores
+    const boughtContent: Content[] = await this.contentModel.find({
       _id: { $in: user.id_bought_content },
-    }); // Buscar los contenidos comprados por el usuario
-
-    const contentId = boughtContent.map((content) => content._id); // Extraer el id de los contenidos comprados
-
-    const userBoughtContent = user.id_bought_content || []; // Si el usuario no tiene contenidos comprados, devolver un array vacío
-
-    userBoughtContent.push(...contentId); // Agregar los ids de contenidos comprados al array userBoughtContent
-
-    // Devolver la lista de contenidos comprados
+    });
     return boughtContent;
+  }
+
+  async addComment(_id: string, comment: any) {
+    const contentComment: ContentDocument = await this.contentModel.findById(
+      _id,
+    );
+    contentComment.comments.push(comment);
+    contentComment.save();
+    return contentComment;
   }
 }
