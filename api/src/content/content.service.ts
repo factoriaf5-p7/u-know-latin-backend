@@ -9,9 +9,6 @@ import { UpdateContentDto } from './dto/update-content.dto';
 
 @Injectable()
 export class ContentService {
-  create(newContent: { id: string; title: string; author: string; description: string; price: number; created_at: Date; update: Date; category: string; dificulty: number; sales: boolean; content: string; }): any {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     @InjectModel(Content.name) private readonly contentModel: Model<Content>,
     @InjectModel('User') private readonly userModel: Model<User>,

@@ -5,9 +5,6 @@ export type ContentDocument = HydratedDocument<Content>;
 
 @Schema()
 export class Content extends Document {
-  toMatchObject(arg0: { id: any; }) {
-    throw new Error('Method not implemented.');
-  }
   @Prop({ required: true })
   'title': string;
 
