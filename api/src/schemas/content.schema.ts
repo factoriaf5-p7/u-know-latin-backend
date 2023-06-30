@@ -9,8 +9,8 @@ export class Content extends Document {
   @Prop({ required: true })
   'title': string;
 
-  @Prop({ required: true, unique: true })
-  'author': string;
+  @Prop()
+  'author_id': string;
 
   @Prop()
   'description': string;

@@ -9,7 +9,7 @@ const contents = [
   {
     id: '124',
     title: 'AprendiendoCss',
-    author: 'Ari El Principe',
+    author_id: 'Ari El Principe',
     description: 'Aprenderas en pocos pasos todo lo relacionado a css',
     price: 10.99,
     created_at: new Date('2023-06-15'),
@@ -78,7 +78,7 @@ describe('ContentService', () => {
     const newContent = {
       id: '124',
       title: 'AprendiendoCss',
-      author: 'Ari El Principe',
+      author_id: 'Ari El Principe',
       description: 'Aprenderas en pocos pasos todo lo relacionado a css',
       price: 10.99,
       created_at: new Date('2023-06-15'),
@@ -107,6 +107,7 @@ describe('ContentService', () => {
     expect(deletedContent).toMatchObject({
       id: '124',
       title: 'AprendiendoCss',
+      author_id: 'Ari El Principe',
       description: 'Aprenderas en pocos pasos todo lo relacionado a css',
       price: 10.99,
       created_at: new Date('2023-06-15'),

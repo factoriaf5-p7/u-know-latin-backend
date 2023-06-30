@@ -12,8 +12,7 @@ export class CreateContentDto {
   title: string;
 
   @IsString()
-  @IsNotEmpty()
-  'author': string;
+  author_id: string;
 
   @IsString()
   @IsNotEmpty()
