@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Content } from '../schemas/content.schema';
+import { Content, ContentDocument } from '../schemas/content.schema';
 import { User } from '../schemas/users.schema';
-
 import { CreateContentDto } from '../content/dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
+
 
 @Injectable()
 export class ContentService {
@@ -95,9 +95,15 @@ export class ContentService {
     });
     return boughtContent;
   }
-  /* async addComment(id: string, comment: any) { 
-    let book: CommentDocument = await this.commentModel.findById(id); 
-    book.comments.push(comment); 
-    book.save(); 
-    return book; */
-}
+  
+  async addComment(id: string, comment: any) { 
+    let contentComment: ContentDocument = await this.contentModel.findById(id); 
+    contentComment.comments.push(comment); 
+    contentComment.save(); 
+    return contentComment;
+  }
+
+  }
+
+
+

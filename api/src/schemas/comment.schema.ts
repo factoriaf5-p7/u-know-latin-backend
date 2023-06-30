@@ -1,11 +1,11 @@
 import { Prop, SchemaFactory,Schema } from "@nestjs/mongoose";
-import mongoose, { HydratedDocument} from "mongoose";
+import mongoose from "mongoose";
 import { User } from "./users.schema";
 
-export type CommentDocument =  HydratedDocument<Comment>;
+export type CommentDocument = Comment & Document;
 
 @Schema()
-export class Comment extends Document {
+export class Comment {
     @Prop()
     title:string;
     @Prop()

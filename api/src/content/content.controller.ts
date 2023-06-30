@@ -12,6 +12,7 @@ import { CreateContentDto } from '../content/dto/create-content.dto';
 import { Content } from '../schemas/content.schema';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateCommentDto } from 'src/dto/create-comment.dto';
 
 @ApiTags('content')
 @Controller('content')
@@ -57,4 +58,12 @@ export class ContentController {
   getBoughtContent(@Param('id') id: string) {
     return this.contentService.getBoughtContent(id);
   }
+  @Post(':id/comment') 
+  async addComment(
+    @Param('id') id: string, 
+    @Body() comment: CreateCommentDto, 
+  ) {
+    return this.contentService.addComment(id, comment); 
+  }
+
 }
