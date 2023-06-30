@@ -1,6 +1,5 @@
 import { IsNotEmpty, IsString} from "class-validator";
-import { User } from "src/schemas/users.schema";
-
+import { User } from 'src/schemas/users.schema';
 
 export class CreateCommentDto {
 @IsNotEmpty()   

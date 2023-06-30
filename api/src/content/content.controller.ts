@@ -58,12 +58,8 @@ export class ContentController {
   getBoughtContent(@Param('id') id: string) {
     return this.contentService.getBoughtContent(id);
   }
-  @Post(':id/comment') 
-  async addComment(
-    @Param('id') id: string, 
-    @Body() comment: CreateCommentDto, 
-  ) {
-    return this.contentService.addComment(id, comment); 
+  @Post(':id/comment')
+  async addComment(@Param('id') id: string, @Body() comment: CreateCommentDto) {
+    return await this.contentService.addComment(id, comment);
   }
-
 }

@@ -36,8 +36,7 @@ export class Content extends Document {
   @Prop()
   'content': string;
 
-  @Prop([CommentSchema]) 
+  @Prop([CommentSchema])
   comments: Comment[];
-
 }
 export const ContentSchema = SchemaFactory.createForClass(Content);

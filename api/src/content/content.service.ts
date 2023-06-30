@@ -96,14 +96,12 @@ export class ContentService {
     return boughtContent;
   }
   
-  async addComment(id: string, comment: any) { 
-    let contentComment: ContentDocument = await this.contentModel.findById(id); 
-    contentComment.comments.push(comment); 
-    contentComment.save(); 
+  async addComment(_id: string, comment: any) {
+    const contentComment: ContentDocument = await this.contentModel.findById(
+      _id,
+    );
+    contentComment.comments.push(comment);
+    contentComment.save();
     return contentComment;
   }
-
-  }
-
-
-
+}
