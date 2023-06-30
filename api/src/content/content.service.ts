@@ -100,7 +100,4 @@ export class ContentService {
     book.comments.push(comment); 
     book.save(); 
     return book; */
-  }
-
-
-
+}
