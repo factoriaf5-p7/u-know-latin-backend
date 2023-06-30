@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Content } from '../schemas/content.schema';
+import { Content, ContentDocument } from '../schemas/content.schema';
 import { User } from '../schemas/users.schema';
-
 import { CreateContentDto } from '../content/dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
 
@@ -22,13 +21,19 @@ export class ContentService {
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
     console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
+    await this.contentModel.updateOne(
+      { createdContentId },
+      { $push: { author_id: user._id } },
+    );
     await this.userModel.updateOne(
       //relación entre id usario y id contenido
       { _id: user._id },
-      { $push: { id_published_content: createdContentId } }, //push para poder hacerlo
-      //cada vez que se actualicen los contenidos
+      {
+        $push: { id_published_content: { createdContentId } },
+      },
     );
-    user.save();
+    await createdContent.save();
+    await user.save();
     return createdContent;
   }
 
@@ -95,9 +100,13 @@ export class ContentService {
     });
     return boughtContent;
   }
-  /* async addComment(id: string, comment: any) { 
-    let book: CommentDocument = await this.commentModel.findById(id); 
-    book.comments.push(comment); 
-    book.save(); 
-    return book; */
+
+  async addComment(_id: string, comment: any) {
+    const contentComment: ContentDocument = await this.contentModel.findById(
+      _id,
+    );
+    contentComment.comments.push(comment);
+    contentComment.save();
+    return contentComment;
   }
+}
