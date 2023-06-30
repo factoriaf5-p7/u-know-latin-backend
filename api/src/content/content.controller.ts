@@ -25,7 +25,7 @@ export class ContentController {
   ): Promise<Content> {
     return this.contentService.createContent(contentDto, userId);
   }
-  
+
   @Get()
   findAll() {
     return this.contentService.findAll();

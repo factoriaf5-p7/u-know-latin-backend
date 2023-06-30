@@ -8,6 +8,7 @@ const content = [
   {
     id: '1234',
     title: 'Aprendiendo Html',
+    author: 'Raúl García',
     description: 'Aprenderas en pocos pasos todo lo relacionado a html',
     price: 10.99,
     created_at: new Date('2023-06-15'),
@@ -87,6 +88,7 @@ describe('ContentController', () => {
     const newContent = {
       id: '124',
       title: 'AprendiendoCss',
+      author: 'Ari El Principe',
       description: 'Aprenderas en pocos pasos todo lo relacionado a css',
       price: 10.99,
       created_at: new Date('2023-06-15'),
