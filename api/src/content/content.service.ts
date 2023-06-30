@@ -9,7 +9,6 @@ import { UpdateContentDto } from './dto/update-content.dto';
 
 @Injectable()
 export class ContentService {
-  
   constructor(
     @InjectModel(Content.name) private readonly contentModel: Model<Content>,
     @InjectModel('User') private readonly userModel: Model<User>,
@@ -70,11 +69,12 @@ export class ContentService {
       throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
     }
 
-    if (user.id_bought_content.includes(parseInt(contentId))) {
+    if (user.id_bought_content.includes(contentId)) {
       throw new HttpException('Content already purchased', HttpStatus.CONFLICT);
     }
 
-    user.id_bought_content.push(parseInt(contentId));
+    user.id_bought_content.push(contentId);
+
     await user.save();
 
     content.sales = true;
@@ -85,7 +85,7 @@ export class ContentService {
 
   async getBoughtContent(id: string): Promise<Content[]> {
     // Buscar el usuario por su ID y verificar si el usuario existe
-    const user: User = await this.userModel.findById({ id });
+    const user: User = await this.userModel.findById(id);
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
@@ -101,6 +101,3 @@ export class ContentService {
     book.save(); 
     return book; */
   }
-
-
-

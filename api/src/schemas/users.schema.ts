@@ -21,9 +21,9 @@ export class User extends Document {
   @Prop() 
   'chat': string;
   @Prop()
-  'id_published_content': number[];
+  'id_published_content': string[];
   @Prop()
-  'id_bought_content': number[];
+  'id_bought_content': string[];
   @Prop()
   'created_at:': Date;
   @Prop()
