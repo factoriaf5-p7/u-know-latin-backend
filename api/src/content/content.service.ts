@@ -22,13 +22,19 @@ export class ContentService {
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
     console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
+    await this.contentModel.updateOne(
+      { createdContentId },
+      { $push: { author_id: user._id } },
+    );
     await this.userModel.updateOne(
       //relación entre id usario y id contenido
       { _id: user._id },
-      { $push: { id_published_content: createdContentId } }, //push para poder hacerlo
-      //cada vez que se actualicen los contenidos
+      {
+        $push: { id_published_content: { createdContentId } },
+      },
     );
-    user.save();
+    await createdContent.save();
+    await user.save();
     return createdContent;
   }
 
