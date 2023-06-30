@@ -9,9 +9,6 @@ import { UpdateContentDto } from './dto/update-content.dto';
 
 @Injectable()
 export class ContentService {
-  create(newContent: { id: string; title: string; description: string; price: number; created_at: Date; update: Date; category: string; dificulty: number; sales: boolean; content: string; }): any {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     @InjectModel(Content.name) private readonly contentModel: Model<Content>,
     @InjectModel('User') private readonly userModel: Model<User>,
@@ -84,23 +81,16 @@ export class ContentService {
     return content;
   }
 
-  async getBoughtContent(id: string) {
-    const user = await this.userModel.findById(id); //Buscar usuario por id
+  async getBoughtContent(id: string): Promise<Content[]> {
+    // Buscar el usuario por su ID y verificar si el usuario existe
+    const user: User = await this.userModel.findById({ id });
     if (!user) {
-      throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
-    } // Si el usuario no existe: "Usuario no encontrado"
-
-    const boughtContent = await this.contentModel.find({
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    // Buscar los contenidos comprados utilizando los identificadores
+    const boughtContent: Content[] = await this.contentModel.find({
       _id: { $in: user.id_bought_content },
-    }); // Buscar los contenidos comprados por el usuario
-
-    const contentId = boughtContent.map((content) => content._id); // Extraer el id de los contenidos comprados
-
-    const userBoughtContent = user.id_bought_content || []; // Si el usuario no tiene contenidos comprados, devolver un array vacío
-
-    userBoughtContent.push(...contentId); // Agregar los ids de contenidos comprados al array userBoughtContent
-
-    // Devolver la lista de contenidos comprados
+    });
     return boughtContent;
   }
 }
