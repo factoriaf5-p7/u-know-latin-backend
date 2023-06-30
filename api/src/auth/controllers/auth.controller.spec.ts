@@ -1,28 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from '../services/auth.service';
-import { Request } from 'express'; 
+import { Request } from 'express';
 
 describe('AuthController', () => {
   let controller: AuthController;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let service: AuthService;
   const mockAuthService = {
     signUp: jest
       .fn()
-      .mockReturnValue(Promise.resolve({access_token: 'token here'}))
+      .mockReturnValue(Promise.resolve({ access_token: 'token here' })),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [ AuthService ]
+      providers: [AuthService],
     })
       .overrideProvider(AuthService)
       .useValue(mockAuthService)
       .compile();
 
     controller = module.get<AuthController>(AuthController);
-    service = module.get<AuthService>(AuthService);
+    // service = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {

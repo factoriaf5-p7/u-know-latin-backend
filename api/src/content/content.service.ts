@@ -20,6 +20,7 @@ export class ContentService {
   ): Promise<Content> {
     const createdContent = await this.contentModel.create(createContentDto); //creamos contenido
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
+    console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
     await this.userModel.updateOne(
       //relación entre id usario y id contenido
