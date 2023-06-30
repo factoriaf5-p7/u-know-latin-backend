@@ -9,6 +9,7 @@ import { UpdateContentDto } from './dto/update-content.dto';
 
 @Injectable()
 export class ContentService {
+  
   constructor(
     @InjectModel(Content.name) private readonly contentModel: Model<Content>,
     @InjectModel('User') private readonly userModel: Model<User>,
@@ -101,4 +102,12 @@ export class ContentService {
     // Devolver la lista de contenidos comprados
     return boughtContent;
   }
-}
+  /* async addComment(id: string, comment: any) { 
+    let book: CommentDocument = await this.commentModel.findById(id); 
+    book.comments.push(comment); 
+    book.save(); 
+    return book; */
+  }
+
+
+

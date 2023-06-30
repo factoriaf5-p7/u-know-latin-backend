@@ -1,13 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Document } from 'mongoose';
+import { CommentSchema } from './comment.schema';
 
 export type ContentDocument = HydratedDocument<Content>;
 
 @Schema()
 export class Content extends Document {
-  toMatchObject(arg0: { id: any; }) {
-    throw new Error('Method not implemented.');
-  }
+ 
   @Prop({ required: true })
   'title': string;
 
@@ -34,5 +33,9 @@ export class Content extends Document {
 
   @Prop()
   'content': string;
+
+  @Prop([CommentSchema]) 
+  comments: Comment[];
+
 }
 export const ContentSchema = SchemaFactory.createForClass(Content);
