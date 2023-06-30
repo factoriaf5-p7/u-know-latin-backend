@@ -6,9 +6,11 @@ export type ContentDocument = HydratedDocument<Content>;
 
 @Schema()
 export class Content extends Document {
- 
   @Prop({ required: true })
   'title': string;
+
+  @Prop({ required: true, unique: true })
+  'author': string;
 
   @Prop()
   'description': string;
