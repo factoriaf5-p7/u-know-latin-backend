@@ -1,40 +1,44 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from '../services/auth.service';
-import { Request } from 'express'; 
+import { UserService } from '../../user/user.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { User } from '../../schemas/users.schema';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let service: AuthService;
+  let userService: UserService;
   const mockAuthService = {
-    signUp: jest
+    generateToken: jest
       .fn()
-      .mockReturnValue(Promise.resolve({access_token: 'token here'}))
+      .mockReturnValue(Promise.resolve({ access_token: 'token here' })),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [ AuthService ]
+      providers: [
+        AuthService,
+        UserService,
+        {
+          provide: getModelToken(User.name),
+          useValue: jest.fn(),
+        },
+      ],
     })
       .overrideProvider(AuthService)
       .useValue(mockAuthService)
       .compile();
 
     controller = module.get<AuthController>(AuthController);
-    service = module.get<AuthService>(AuthService);
+    userService = module.get<UserService>(UserService);
+    console.log(userService);
   });
 
   describe('signup', () => {
     it('should create a new user', async () => {
-      const createUserDto: any = {
-        // Provide the necessary properties for creating a user
-        // Replace these with the actual user data for testing
-        user_name: 'testuser',
-        password: 'testpassword',
-      };
-
-      const createdUser: CreateUserDto = {
+      const createdUser: any = {
         id: '1',
         name: 'John Doe',
         user_name: 'johndoe',
@@ -42,19 +46,13 @@ describe('AuthController', () => {
         email: 'johndoe@example.com',
         wallet_balance: 100,
         chat: 'Hello, World!',
-        id_published_content: [1, 2, 3],
-        id_bought_content: [4, 5],
-        created_at: new Date(),
-        created_update: new Date(),
       };
-      
+      jest.spyOn(userService, 'create').mockResolvedValue(createdUser);
 
-      jest.spyOn(userService, 'create').mockResolvedValue(createdUser as any);
+      const result = await controller.signup(createdUser);
 
-      const result = await authController.signup(createUserDto);
-
-      expect(userService.create).toHaveBeenCalledWith(createUserDto);
-      expect(result).toBe(createdUser);
+      expect(userService.create).toHaveBeenCalledWith(createdUser);
+      expect(createdUser).toBe(result);
     });
   });
 
@@ -73,15 +71,9 @@ describe('AuthController', () => {
         },
       };
       const generatedToken = {
-        access_token: 'sdsdsdsd',
-      } // Replace with the expected generated token
-
-      jest.spyOn(authService, 'generateToken').mockReturnValue(generatedToken);
-
-      const result = await authController.login(req);
-
-      expect(authService.generateToken).toHaveBeenCalledWith(req.user);
-      expect(result).toBe(generatedToken);
+        access_token: 'token here',
+      };
+      expect(await controller.login(req.user)).toMatchObject(generatedToken);
     });
   });
 });

@@ -4,9 +4,12 @@ import {
   IsString,
   IsNumber,
   IsDate,
+  IsOptional,
   IsArray,
+  IsDateString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -54,12 +57,18 @@ export class CreateUserDto {
   id_bought_content: number[];
 
   @ApiProperty()
-  @IsNotEmpty()
-  /*@IsDate()*/
-  created_at: Date;
+  @IsOptional()
+  @IsDate()
+  created_at?: Date;
 
   @ApiProperty()
-  @IsNotEmpty()
-  /*@IsDate()*/
-  created_update: Date;
+  @IsOptional()
+  @IsDate()
+  created_update?: Date;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsArray()
+  @Transform((value) => (value === undefined ? [] : value))
+  roles?: string[];
 }

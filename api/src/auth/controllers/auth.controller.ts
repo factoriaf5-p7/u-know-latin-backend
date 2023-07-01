@@ -9,7 +9,10 @@ import { AuthGuard } from '@nestjs/passport';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService, private userService: UserService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
   @Post('signup')
   async signup(@Body() user: CreateUserDto) {
     return this.userService.create(user);
@@ -17,6 +20,6 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   login(@Req() req: Request) {
-    return this.authService.generateToken(req.body);
+    return this.authService.generateToken(req.user);
   }
 }
