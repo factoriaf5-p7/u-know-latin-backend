@@ -1,10 +1,17 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Content, ContentDocument } from '../schemas/content.schema';
 import { User } from '../schemas/users.schema';
 import { CreateContentDto } from '../content/dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
+import { RateContentDto } from './dto/rateContent.dto';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class ContentService {
@@ -109,4 +116,54 @@ export class ContentService {
     contentComment.save();
     return contentComment;
   }
+
+  async rateContent(
+    id: string,
+    rateContentDto: RateContentDto,
+  ): Promise<ContentDocument> {
+    const content = await this.contentModel.findById(id);
+
+    if (!content) {
+      throw new NotFoundException('Content not found');
+    }
+
+    if (!rateContentDto.rating || isNaN(Number(rateContentDto.rating))) {
+      throw new HttpException('Invalid rating value', HttpStatus.BAD_REQUEST);
+    }
+
+    const newRating = Number(rateContentDto.rating); //se convierte ese valor a numero
+    const totalRatings = content.ratings?.length ?? 0; //si no hay valoraciones, se le asigna 0
+    const updatedRatings: number[] = [...content.ratings, newRating];
+    let newAverageRating: number;
+
+    if (totalRatings <= 4) {
+      //primeras 4 valoraciones
+      if (newRating >= 4.8) {
+        //si es mayor o igual a 4.8
+        newAverageRating =
+          (content.averageRating * totalRatings + newRating) /
+          (totalRatings + 1); //se calcula la media
+      } else {
+        newAverageRating = content.averageRating; //si no es mayor o igual a 4.8, se mantiene la media
+      }
+    } else {
+      if (newRating >= 4.8) {
+        newAverageRating =
+          (content.averageRating * (totalRatings - 4) + newRating) /
+          (totalRatings - 3);
+      } else {
+        newAverageRating = content.averageRating; //
+      }
+    }
+
+    content.ratings = updatedRatings;
+    content.averageRating = isNaN(newAverageRating)
+      ? newRating
+      : newAverageRating;
+
+    await content.save();
+
+    return content;
+  }
 }
+// las primeras cuatro valoraciones solo se agregarán a la lista de valoraciones si su valor es mayor o igual a 4.8. Después de la cuarta valoración, todas las valoraciones se tendrán en cuenta para calcular la nueva media. es asi la consigna????
