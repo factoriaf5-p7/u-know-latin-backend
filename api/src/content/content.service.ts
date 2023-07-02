@@ -24,7 +24,11 @@ export class ContentService {
     createContentDto: CreateContentDto,
     _id: string,
   ): Promise<Content> {
-    const createdContent = await this.contentModel.create(createContentDto); //creamos contenido
+    const createdContent = await this.contentModel.create({
+      ...createContentDto,
+      price: 10, // Precio inicial
+      author: _id,
+    }); //creamos contenido
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
     console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
@@ -136,24 +140,19 @@ export class ContentService {
     const updatedRatings: number[] = [...content.ratings, newRating];
     let newAverageRating: number;
 
-    if (totalRatings <= 4) {
-      //primeras 4 valoraciones
+    if (totalRatings < 4) {
       if (newRating >= 4.8) {
-        //si es mayor o igual a 4.8
         newAverageRating =
-          (content.averageRating * totalRatings + newRating) /
-          (totalRatings + 1); //se calcula la media
+          (content.averageRating * (totalRatings >= 4 ? 4 : totalRatings) +
+            newRating) /
+          (totalRatings + 1);
       } else {
-        newAverageRating = content.averageRating; //si no es mayor o igual a 4.8, se mantiene la media
+        newAverageRating = content.averageRating;
       }
     } else {
-      if (newRating >= 4.8) {
-        newAverageRating =
-          (content.averageRating * (totalRatings - 4) + newRating) /
-          (totalRatings - 3);
-      } else {
-        newAverageRating = content.averageRating; //
-      }
+      newAverageRating =
+        (content.averageRating * (totalRatings - 4) + newRating) /
+        (totalRatings - 3);
     }
 
     content.ratings = updatedRatings;
@@ -161,6 +160,10 @@ export class ContentService {
       ? newRating
       : newAverageRating;
 
+    if (content.averageRating <= 3) {
+      // Verificar si la media de valoración es menor o igual a 3
+      content.price = content.price * 0.9; // Reducir el precio en un 10%
+    }
     await content.save();
 
     return content;
