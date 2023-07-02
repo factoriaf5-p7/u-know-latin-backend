@@ -36,7 +36,19 @@ export class Content extends Document {
   @Prop()
   'content': string;
 
+  @Prop({ type: [Number], default: [] })
+  ratings: number[];
+
   @Prop([CommentSchema])
   comments: Comment[];
+
+  @Prop({
+    type: Number,
+    validate: {
+      validator: (value: number) => !isNaN(value),
+      message: 'Invalid average rating value',
+    },
+  })
+  'averageRating': number;
 }
 export const ContentSchema = SchemaFactory.createForClass(Content);
