@@ -12,7 +12,7 @@ import { CreateContentDto } from '../content/dto/create-content.dto';
 import { Content } from '../schemas/content.schema';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateCommentDto } from 'src/dto/create-comment.dto';
+import { CreateCommentDto } from '../dto/create-comment.dto';
 
 @ApiTags('content')
 @Controller('content')
