@@ -29,7 +29,7 @@ export class Content extends Document {
   @Prop()
   'dificulty': number;
 
-  @Prop()
+  @Prop({ default: false, required: false })
   'sales': boolean;
 
   @Prop()

@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsDate,
   IsBoolean,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateContentDto {
@@ -39,6 +40,7 @@ export class CreateContentDto {
 
   @IsNotEmpty()
   @IsBoolean()
+  @IsOptional()
   sales: boolean;
 
   @IsString()

@@ -52,12 +52,37 @@ export class ContentService {
   }
 
   async delete(id: string) {
+    const content = await this.contentModel.findById(id).exec(); // Buscar el contenido por su ID
+    if (!content) {
+      throw new HttpException('Content not Found', HttpStatus.BAD_REQUEST);
+    }
+
+    // Verificar si el contenido ha sido comprado por algún usuario
+    const isContentPurchased = await this.contentModel.exists({
+      id_bought_content: id,
+    });
+    if (content.sales) {
+      throw new HttpException(
+        'Content cannot be deleted as it has been purchased',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    // Verificar si el usuario que realiza la solicitud es el propietario del contenido
+    // if (content._id !== userId) {
+    //   throw new HttpException(
+    //     'You do not have permission to delete this content',
+    //     HttpStatus.FORBIDDEN,
+    //   );
+    // }
+
     const deletedContent = await this.contentModel
       .findByIdAndRemove({ _id: id })
-      .exec();
+      .exec(); // Eliminar el contenido por su ID
     if (!deletedContent) {
       throw new HttpException('Content not Found', HttpStatus.BAD_REQUEST);
     }
+
     return deletedContent;
   }
 
