@@ -6,6 +6,8 @@ import {
   Body,
   Param,
   Patch,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ContentService } from './content.service';
 import { CreateContentDto } from '../content/dto/create-content.dto';
@@ -13,6 +15,7 @@ import { Content } from '../schemas/content.schema';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCommentDto } from '../dto/create-comment.dto';
+import { RateContentDto } from './dto/rateContent.dto';
 
 @ApiTags('content')
 @Controller('content')
@@ -61,5 +64,19 @@ export class ContentController {
   @Post(':id/comment')
   async addComment(@Param('id') id: string, @Body() comment: CreateCommentDto) {
     return await this.contentService.addComment(id, comment);
+  }
+
+  @Post(':id/rate')
+  async rateContent(
+    @Param('id') id: string,
+    @Body() rateContentDto: RateContentDto,
+  ): Promise<Content> {
+    // Llamar a la función de validación y verificación del rating en el servicio
+    if (!rateContentDto.rating || isNaN(Number(rateContentDto.rating))) {
+      throw new HttpException('Invalid rating value', HttpStatus.BAD_REQUEST);
+    }
+
+    // Llamar al servicio solo si la validación es exitosa
+    return this.contentService.rateContent(id, rateContentDto);
   }
 }

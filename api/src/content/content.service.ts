@@ -1,10 +1,17 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Content, ContentDocument } from '../schemas/content.schema';
 import { User } from '../schemas/users.schema';
 import { CreateContentDto } from '../content/dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
+import { RateContentDto } from './dto/rateContent.dto';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class ContentService {
@@ -17,7 +24,11 @@ export class ContentService {
     createContentDto: CreateContentDto,
     _id: string,
   ): Promise<Content> {
-    const createdContent = await this.contentModel.create(createContentDto); //creamos contenido
+    const createdContent = await this.contentModel.create({
+      ...createContentDto,
+      price: 10, // Precio inicial
+      author: _id,
+    }); //creamos contenido
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
     console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
@@ -134,4 +145,53 @@ export class ContentService {
     contentComment.save();
     return contentComment;
   }
+
+  async rateContent(
+    id: string,
+    rateContentDto: RateContentDto,
+  ): Promise<ContentDocument> {
+    const content = await this.contentModel.findById(id);
+
+    if (!content) {
+      throw new NotFoundException('Content not found');
+    }
+
+    if (!rateContentDto.rating || isNaN(Number(rateContentDto.rating))) {
+      throw new HttpException('Invalid rating value', HttpStatus.BAD_REQUEST);
+    }
+
+    const newRating = Number(rateContentDto.rating); //se convierte ese valor a numero
+    const totalRatings = content.ratings?.length ?? 0; //si no hay valoraciones, se le asigna 0
+    const updatedRatings: number[] = [...content.ratings, newRating];
+    let newAverageRating: number;
+
+    if (totalRatings < 4) {
+      if (newRating >= 4.8) {
+        newAverageRating =
+          (content.averageRating * (totalRatings >= 4 ? 4 : totalRatings) +
+            newRating) /
+          (totalRatings + 1);
+      } else {
+        newAverageRating = content.averageRating;
+      }
+    } else {
+      newAverageRating =
+        (content.averageRating * (totalRatings - 4) + newRating) /
+        (totalRatings - 3);
+    }
+
+    content.ratings = updatedRatings;
+    content.averageRating = isNaN(newAverageRating)
+      ? newRating
+      : newAverageRating;
+
+    if (content.averageRating <= 3) {
+      // Verificar si la media de valoración es menor o igual a 3
+      content.price = content.price * 0.9; // Reducir el precio en un 10%
+    }
+    await content.save();
+
+    return content;
+  }
 }
+// las primeras cuatro valoraciones solo se agregarán a la lista de valoraciones si su valor es mayor o igual a 4.8. Después de la cuarta valoración, todas las valoraciones se tendrán en cuenta para calcular la nueva media. es asi la consigna????
