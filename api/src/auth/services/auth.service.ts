@@ -1,10 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayload } from '../../schemas/token.model';
-import { UserSchema, User } from '../../schemas/users.schema';
+import { User } from '../../schemas/users.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -23,7 +22,11 @@ export class AuthService {
   }
 
   generateToken(user: Partial<User>) {
-    const payload: TokenPayload = { role: user.role, sub: user.id };
+    const payload: TokenPayload = {
+      email: user.email,
+      roles: user.roles,
+      sub: user.id,
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };

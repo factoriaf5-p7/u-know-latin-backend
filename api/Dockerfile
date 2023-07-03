@@ -2,7 +2,7 @@
 FROM node:18-alpine AS development
 WORKDIR /app
 COPY package*.json ./
-# RUN npm install --only=development
+RUN npm install 
 COPY . .
 CMD ["npm", "run", "start:dev"]
 
@@ -12,7 +12,7 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 WORKDIR /app
 COPY package*.json ./
-# RUN npm install --only=production
+RUN npm install
 COPY . .
 RUN npm run build
 CMD ["npm", "run", "start:prod"

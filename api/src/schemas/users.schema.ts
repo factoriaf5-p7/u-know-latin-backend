@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Document } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
+import { Role } from '../auth/enums/role.enum';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -20,14 +21,16 @@ export class User extends Document {
   'wallet_balance': number;
   @Prop()
   'chat': string;
+  @Prop({ required: false })
+  'id_published_content'?: string[];
   @Prop()
-  'id_published_content': string[];
+  'id_bought_content'?: string[];
   @Prop()
-  'id_bought_content': string[];
+  'created_at:'?: Date;
   @Prop()
-  'created_at:': Date;
-  @Prop()
-  'created_update': Date;
+  'created_update'?: Date;
+  @Prop({ default: Role.User })
+  'roles'?: Role[];
   async comparePassword(password: string): Promise<boolean> {
     return await bcrypt.compare(password.toString(), this.password);
   }
