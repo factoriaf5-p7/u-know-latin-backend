@@ -15,8 +15,6 @@ const users = [
     chat: 'Lorem ipsum dolor sit amet...',
     id_published_content: [1, 2, 3],
     id_bought_content: [4, 5, 6],
-    created_at: new Date('2023-06-15'),
-    created_update: new Date('2023-06-16'),
   },
 ];
 
@@ -88,8 +86,6 @@ describe('UserController', () => {
       chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
-      created_at: new Date(),
-      created_update: new Date(),
     };
     expect(await controller.create(newUser)).toMatchObject({
       id: expect.any(String),

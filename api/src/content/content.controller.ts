@@ -6,6 +6,8 @@ import {
   Body,
   Param,
   Patch,
+  Req,
+  UseGuards,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -14,10 +16,18 @@ import { CreateContentDto } from '../content/dto/create-content.dto';
 import { Content } from '../schemas/content.schema';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Public } from '../auth/decorators/public.decorator';
+import { Role } from '../auth/enums/role.enum';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateCommentDto } from '../dto/create-comment.dto';
 import { RateContentDto } from './dto/rateContent.dto';
 
 @ApiTags('content')
+// @UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('content')
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
@@ -30,16 +40,21 @@ export class ContentController {
     return this.contentService.createContent(contentDto, userId);
   }
 
+  @Public()
+  // @Roles(Role.User)
   @Get()
-  findAll() {
+  findAll(@Req() req: any) {
+    console.log(req.user, 'user?');
     return this.contentService.findAll();
   }
   //permitir que los usuarios registrados vean contenido por id
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contentService.findOne(id);
   }
   //permitir que los usuarios registrados actualicen contenido
+  @Roles(Role.User)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateContentDto: UpdateContentDto) {
     return this.contentService.update(id, updateContentDto);

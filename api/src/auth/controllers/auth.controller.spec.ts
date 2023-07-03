@@ -1,15 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from '../services/auth.service';
-import { Request } from 'express';
+import { UserService } from '../../user/user.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { User } from '../../schemas/users.schema';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let service: AuthService;
+  let userService: UserService;
   const mockAuthService = {
-    signUp: jest
+    generateToken: jest
       .fn()
       .mockReturnValue(Promise.resolve({ access_token: 'token here' })),
   };
@@ -17,31 +18,62 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthService],
+      providers: [
+        AuthService,
+        UserService,
+        {
+          provide: getModelToken(User.name),
+          useValue: jest.fn(),
+        },
+      ],
     })
       .overrideProvider(AuthService)
       .useValue(mockAuthService)
       .compile();
 
     controller = module.get<AuthController>(AuthController);
-    // service = module.get<AuthService>(AuthService);
+    userService = module.get<UserService>(UserService);
+    console.log(userService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  describe('signup', () => {
+    it('should create a new user', async () => {
+      const createdUser: any = {
+        id: '1',
+        name: 'John Doe',
+        user_name: 'johndoe',
+        password: 'password123',
+        email: 'johndoe@example.com',
+        wallet_balance: 100,
+        chat: 'Hello, World!',
+      };
+      jest.spyOn(userService, 'create').mockResolvedValue(createdUser);
+
+      const result = await controller.signup(createdUser);
+
+      expect(userService.create).toHaveBeenCalledWith(createdUser);
+      expect(createdUser).toBe(result);
+    });
   });
 
-  it('should return an accessToken when a valid user is provided', async () => {
-    const req = {
-      body: {
+  describe('login', () => {
+    it('should generate a token for the authenticated user', async () => {
+      // Create a mock Request object
+      const req: any = {
+        get: jest.fn(),
+        header: jest.fn(),
+        accepts: jest.fn(),
+        acceptsCharsets: jest.fn(),
+        // ... add other required properties and methods here
         user: {
-          email: 'test@mail.com',
-          password: '1234',
+          id: 1,
+          username: 'johndoe',
         },
-      },
-    } as Request;
-    expect(await controller.signup(req.body)).toMatchObject({
-      accessToken: 'token here',
+      };
+      const generatedToken = {
+        access_token: 'token here',
+      };
+      expect(await controller.login(req.user)).toMatchObject(generatedToken);
     });
   });
 });
