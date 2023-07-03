@@ -12,8 +12,9 @@ export class CreateContentDto {
   @IsString()
   title: string;
 
+  @IsOptional()
   @IsString()
-  author_id: string;
+  author_id?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -23,13 +24,13 @@ export class CreateContentDto {
   @IsNumber()
   price: number;
 
-  @IsNotEmpty()
-  // @IsDate()
-  created_at: Date;
+  @IsOptional()
+  @IsDate()
+  created_at?: Date;
 
-  @IsNotEmpty()
-  // @IsDate()
-  update: Date;
+  @IsOptional()
+  @IsDate()
+  update?: Date;
 
   @IsNotEmpty()
   @IsString()
