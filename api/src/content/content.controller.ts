@@ -28,7 +28,7 @@ import { UserService } from '../user/user.service';
 
 @ApiTags('content')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.User)
 @Controller('content')
 export class ContentController {
   constructor(
@@ -36,7 +36,6 @@ export class ContentController {
     private readonly userService: UserService,
   ) {}
   //permitir que los usuarios registrados creen contenido
-  @Roles(Role.User)
   @Post(':userId')
   createContent(
     @Param('userId') userId,
@@ -45,7 +44,6 @@ export class ContentController {
     return this.contentService.createContent(contentDto, userId);
   }
   //permitir que los usuarios registrados vean el contenido que han creado
-  @Roles(Role.User)
   @Get('user/:userId')
   findUserContent(@Param('userId') userId: string): Promise<Content[]> {
     return this.contentService.findUserContent(userId);
@@ -65,15 +63,15 @@ export class ContentController {
     return this.contentService.findOne(id);
   }
   //permitir que los usuarios registrados actualicen contenido
-  @Roles(Role.User)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateContentDto: UpdateContentDto) {
     return this.contentService.update(id, updateContentDto);
   }
   //permitir que los usuarios registrados eliminen contenido
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.contentService.delete(id);
+  delete(@Req() req, @Param('id') id: string) {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    return this.contentService.delete(id, token);
   }
 
   //permitir que los usuarios registrados compren contenido
