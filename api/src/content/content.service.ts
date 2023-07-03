@@ -27,15 +27,11 @@ export class ContentService {
     const createdContent = await this.contentModel.create({
       ...createContentDto,
       price: 10, // Precio inicial
-      author: _id,
+      author_id: _id,
     }); //creamos contenido
     const user = await this.userModel.findById({ _id }); //buscamos autor del contenido
     console.log(user, 'service');
     const createdContentId = createdContent._id; //extraemos el id del contenido
-    await this.contentModel.updateOne(
-      { createdContentId },
-      { $push: { author_id: user._id } },
-    );
     await this.userModel.updateOne(
       //relación entre id usario y id contenido
       { _id: user._id },
