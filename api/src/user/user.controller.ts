@@ -64,7 +64,6 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const token = req.headers.authorization?.replace('Bearer ', '');
-    console.log(token, '2222req');
     return this.userService.update(id, updateUserDto, token);
   }
 
