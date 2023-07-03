@@ -44,6 +44,10 @@ export class ContentService {
     return createdContent;
   }
 
+  async findUserContent(userId: string): Promise<Content[]> {
+    return this.contentModel.find({ author_id: userId }).exec();
+  }
+
   async findAll(): Promise<Content[]> {
     return this.contentModel.find().exec();
   }
