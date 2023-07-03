@@ -26,12 +26,13 @@ import { CreateCommentDto } from '../dto/create-comment.dto';
 import { RateContentDto } from './dto/rateContent.dto';
 
 @ApiTags('content')
-// @UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('content')
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
   //permitir que los usuarios registrados creen contenido
+  @Roles(Role.User)
   @Post(':userId')
   createContent(
     @Param('userId') userId,

@@ -12,7 +12,9 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRoot('mongodb://mongodb/uknowdb'),
+    MongooseModule.forRoot(
+      'mongodb+srv://evangerodriguez00:37820704Evange@cluster0.xfp5sjx.mongodb.net/uknow',
+    ),
     ContentModule,
   ],
   controllers: [AppController],
