@@ -19,8 +19,6 @@ export class User extends Document {
   'role': string;
   @Prop()
   'wallet_balance': number;
-  @Prop()
-  'chat': string;
   @Prop({ required: false })
   'id_published_content'?: string[];
   @Prop()

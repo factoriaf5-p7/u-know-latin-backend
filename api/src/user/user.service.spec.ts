@@ -11,7 +11,6 @@ const users = [
     password: 'secretpassword',
     email: 'johndoe@example.com',
     wallet_balance: 1000,
-    chat: 'Lorem ipsum dolor sit amet...',
     id_published_content: [1, 2, 3],
     id_bought_content: [4, 5, 6],
     // created_at: new Date('2023-06-15'),
@@ -74,7 +73,6 @@ describe('UserService', () => {
       password: 'secretpassword',
       email: 'johndoe@example.com',
       wallet_balance: 1000,
-      chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
       created_at: new Date(),
@@ -93,7 +91,6 @@ describe('UserService', () => {
       password: 'secretpassword',
       email: 'johndoe@example.com',
       wallet_balance: 1000,
-      chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
     });
@@ -108,7 +105,6 @@ describe('UserService', () => {
       password: 'secretpassword',
       email: 'johndoe@example.com',
       wallet_balance: 1000,
-      chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
     });

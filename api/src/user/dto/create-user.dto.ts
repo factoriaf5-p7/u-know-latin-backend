@@ -43,10 +43,6 @@ export class CreateUserDto {
   wallet_balance: number;
 
   @ApiProperty()
-  @IsString()
-  chat: string;
-
-  @ApiProperty()
   @IsNotEmpty()
   @IsArray()
   id_published_content: number[];

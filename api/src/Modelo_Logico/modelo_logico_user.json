@@ -9,9 +9,7 @@
 
   "role": "string",
 
-  "wallet_balance": "number",
-
-  "chat": "string",
+  "wallet_balance": "number(1000)",
 
   "id_published_content": "string[]",
 

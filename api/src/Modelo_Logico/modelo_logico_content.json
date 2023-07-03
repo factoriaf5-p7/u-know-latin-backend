@@ -1,6 +1,6 @@
 {
   "title": "string",
-  "author_id": "string",
+  "author_id": "ObjectId",
   "description": "string",
   "price": "number",
   "created_at": "Date",
