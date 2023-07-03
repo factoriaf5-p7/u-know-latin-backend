@@ -23,6 +23,7 @@ import { RolesGuard } from '../auth/guards/role.guard';
 import { AuthGuard } from '@nestjs/passport';
 @ApiTags('content')
 // @UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('content')
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
@@ -35,8 +36,8 @@ export class ContentController {
     return this.contentService.createContent(contentDto, userId);
   }
 
-  //@Public()
-  @Roles(Role.User)
+  @Public()
+  // @Roles(Role.User)
   @Get()
   findAll(@Req() req: any) {
     console.log(req.user, 'user?');
@@ -49,6 +50,7 @@ export class ContentController {
     return this.contentService.findOne(id);
   }
   //permitir que los usuarios registrados actualicen contenido
+  @Roles(Role.User)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateContentDto: UpdateContentDto) {
     return this.contentService.update(id, updateContentDto);

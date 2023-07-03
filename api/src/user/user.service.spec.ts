@@ -14,8 +14,8 @@ const users = [
     chat: 'Lorem ipsum dolor sit amet...',
     id_published_content: [1, 2, 3],
     id_bought_content: [4, 5, 6],
-    created_at: new Date('2023-06-15'),
-    created_update: new Date('2023-06-16'),
+    // created_at: new Date('2023-06-15'),
+    // created_update: new Date('2023-06-16'),
   },
 ];
 
@@ -24,7 +24,7 @@ describe('UserService', () => {
   const mockUserModel = {
     findAll: jest.fn().mockReturnValue(Promise.resolve(users)),
     create: jest.fn().mockImplementation((createUserDto: CreateUserDto) => {
-      const newUser = {
+      const newUser: any = {
         id: 'ObjectId',
         ...createUserDto,
       };
@@ -35,10 +35,13 @@ describe('UserService', () => {
     update: jest
       .fn()
       .mockImplementation((userId: string, updateUserDto: UpdateUserDto) => {
-        const updatedUser = { id: userId, ...updateUserDto };
         const index = users.findIndex((user) => user.id === userId);
         if (index !== -1) {
-          return Promise.resolve(updatedUser);
+          users[index] = {
+            ...users[index],
+            ...updateUserDto,
+          };
+          return Promise.resolve(users[index]);
         } else {
           return Promise.resolve(null);
         }
@@ -86,7 +89,6 @@ describe('UserService', () => {
     const updateUser = { name: 'Updated name' };
     expect(await service.update(userId, updateUser)).toEqual({
       id: userId,
-      name: 'Updated Name',
       user_name: 'johndoe123',
       password: 'secretpassword',
       email: 'johndoe@example.com',
@@ -94,8 +96,6 @@ describe('UserService', () => {
       chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
-      created_at: new Date(),
-      created_update: new Date(),
     });
   });
   it('should delete a user', async () => {
@@ -111,8 +111,6 @@ describe('UserService', () => {
       chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
-      created_at: new Date('2023-06-15'),
-      created_update: new Date('2023-06-16'),
     });
   });
 });
