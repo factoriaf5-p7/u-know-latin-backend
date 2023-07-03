@@ -7,9 +7,15 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService,@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    private jwtService: JwtService,
+    @InjectModel(User.name) private userModel: Model<User>,
+  ) {}
   async validateUser(email: string, password: string) {
-    const user = await this.userModel.findOne({ email }).select('+password').exec();
+    const user = await this.userModel
+      .findOne({ email })
+      .select('+password')
+      .exec();
     if (user && (await user.comparePassword(password))) {
       return user;
     }

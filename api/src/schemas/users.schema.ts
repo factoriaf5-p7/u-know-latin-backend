@@ -6,7 +6,7 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User extends Document {
-  @Prop({ required: true, unique: true  })
+  @Prop({ required: true, unique: true })
   'name': string;
   @Prop()
   'user_name': string;
@@ -49,7 +49,9 @@ UserSchema.pre('save', function (next) {
   });
 });
 
-UserSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+UserSchema.methods.comparePassword = async function (
+  candidatePassword: string,
+): Promise<boolean> {
   const user = this as User;
   return bcrypt.compare(candidatePassword, user.password);
 };

@@ -31,7 +31,7 @@ describe('UserService', () => {
       users.push(newUser);
       return Promise.resolve(newUser);
     }),
-    delete:jest.fn().mockReturnValue(users[0]),
+    delete: jest.fn().mockReturnValue(users[0]),
     update: jest
       .fn()
       .mockImplementation((userId: string, updateUserDto: UpdateUserDto) => {
@@ -61,13 +61,12 @@ describe('UserService', () => {
   });
   it('should return a users list', async () => {
     expect(await service.findAll()).toMatchObject(users);
-   
   });
-  
- it('should create a new user',async ()=>{
-const newUser = {
-  id:'string',
-  name: 'Jane mick swagger',
+
+  it('should create a new user', async () => {
+    const newUser = {
+      id: 'string',
+      name: 'Jane mick swagger',
       user_name: 'johndoe123',
       password: 'secretpassword',
       email: 'johndoe@example.com',
@@ -77,18 +76,18 @@ const newUser = {
       id_bought_content: [4, 5, 6],
       created_at: new Date(),
       created_update: new Date(),
-}
-expect(await service.create(newUser)).toMatchObject({
-  id:expect.any(String),
-});
- });
- it('should update a user ',async ()=>{
-  const userId = 'string';
-  const updateUser = {name: 'Updated name'};
-  expect(await service.update(userId,updateUser)).toEqual({
-    id: userId,
-    name: 'Updated Name',
-    user_name: 'johndoe123',
+    };
+    expect(await service.create(newUser)).toMatchObject({
+      id: expect.any(String),
+    });
+  });
+  it('should update a user ', async () => {
+    const userId = 'string';
+    const updateUser = { name: 'Updated name' };
+    expect(await service.update(userId, updateUser)).toEqual({
+      id: userId,
+      name: 'Updated Name',
+      user_name: 'johndoe123',
       password: 'secretpassword',
       email: 'johndoe@example.com',
       wallet_balance: 1000,
@@ -97,24 +96,23 @@ expect(await service.create(newUser)).toMatchObject({
       id_bought_content: [4, 5, 6],
       created_at: new Date(),
       created_update: new Date(),
+    });
   });
- });
- it('should delete a user', async () => {
-  const userId = 'ObjectId';
-  const deletedUser = await service.delete(userId);
-  expect(deletedUser).toMatchObject( {
-    id: 'string',
-    name: 'John Doe',
-    user_name: 'johndoe123',
-    password: 'secretpassword',
-    email: 'johndoe@example.com',
-    wallet_balance: 1000,
-    chat: 'Lorem ipsum dolor sit amet...',
-    id_published_content: [1, 2, 3],
-    id_bought_content: [4, 5, 6],
-    created_at: new Date('2023-06-15'),
-    created_update: new Date('2023-06-16'),
-  },);
- 
-});
+  it('should delete a user', async () => {
+    const userId = 'ObjectId';
+    const deletedUser = await service.delete(userId);
+    expect(deletedUser).toMatchObject({
+      id: 'string',
+      name: 'John Doe',
+      user_name: 'johndoe123',
+      password: 'secretpassword',
+      email: 'johndoe@example.com',
+      wallet_balance: 1000,
+      chat: 'Lorem ipsum dolor sit amet...',
+      id_published_content: [1, 2, 3],
+      id_bought_content: [4, 5, 6],
+      created_at: new Date('2023-06-15'),
+      created_update: new Date('2023-06-16'),
+    });
+  });
 });
