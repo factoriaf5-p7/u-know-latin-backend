@@ -73,7 +73,6 @@ describe('ContentService', () => {
       "password": "jauiod", 
       "email": "hesha@example.com",
       "wallet_balance": 1000,
-      "chat":"Lorem ipsum dolor sit amet...",
        "id_published_content":[""], 
        "id_bought_content": [""],
     };
@@ -255,7 +254,6 @@ describe('ContentService', () => {
       "password": "jauiod", 
       "email": "hesha@example.com",
       "wallet_balance": 1000,
-      "chat":"Lorem ipsum dolor sit amet...",
        "id_published_content":[""], 
        "id_bought_content": [""],
       // Aquí van los datos del usuario
@@ -315,7 +313,6 @@ describe('ContentService', () => {
       "password": "jauiod", 
       "email": "hesha@example.com",
       "wallet_balance": 1000,
-      "chat":"Lorem ipsum dolor sit amet...",
        "id_published_content":[""], 
        "id_bought_content": [""],
       // Aquí van los datos del usuario

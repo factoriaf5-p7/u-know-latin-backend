@@ -45,7 +45,7 @@ describe('AuthController', () => {
         password: 'password123',
         email: 'johndoe@example.com',
         wallet_balance: 100,
-        chat: 'Hello, World!',
+        
       };
       jest.spyOn(userService, 'create').mockResolvedValue(createdUser);
 
