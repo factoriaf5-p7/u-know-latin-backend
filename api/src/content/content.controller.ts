@@ -16,7 +16,6 @@ import { CreateContentDto } from '../content/dto/create-content.dto';
 import { Content } from '../schemas/content.schema';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateCommentDto } from 'src/dto/create-comment.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Public } from '../auth/decorators/public.decorator';
 import { Role } from '../auth/enums/role.enum';
