@@ -41,7 +41,6 @@ export class UserService {
     if (user.id !== decodedToken.sub) {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
-
     // user.name = updateUserDto.name;
     Object.assign(user, updateUserDto);
 

@@ -14,6 +14,7 @@ export class AuthController {
     private authService: AuthService,
     private userService: UserService,
   ) {}
+
   @Public()
   @ApiBody({ type: CreateUserDto }) // Specify the request body schema
   @ApiOperation({ summary: 'User Signup' })

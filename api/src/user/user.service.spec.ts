@@ -89,6 +89,7 @@ describe('UserService', () => {
     const updateUser = { name: 'Updated name' };
     expect(await service.update(userId, updateUser)).toEqual({
       id: userId,
+      name: 'Updated Name',
       user_name: 'johndoe123',
       password: 'secretpassword',
       email: 'johndoe@example.com',
@@ -96,6 +97,8 @@ describe('UserService', () => {
       chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
+      created_at: new Date(),
+      created_update: new Date(),
     });
   });
   it('should delete a user', async () => {
@@ -111,6 +114,8 @@ describe('UserService', () => {
       chat: 'Lorem ipsum dolor sit amet...',
       id_published_content: [1, 2, 3],
       id_bought_content: [4, 5, 6],
+      created_at: new Date('2023-06-15'),
+      created_update: new Date('2023-06-16'),
     });
   });
 });
