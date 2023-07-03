@@ -1,0 +1,13 @@
+{
+  "title": "string",
+  "author_id": "string",
+  "description": "string",
+  "price": "number",
+  "created_at": "Date",
+  "updated": "Date",
+  "category": "string",
+  "dificulty": "number",
+  "sales": "boolean",
+  "content": "string",
+  "comments": "comments[]"
+}
